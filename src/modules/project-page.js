@@ -25,8 +25,8 @@ const load = (url) => {
 
 function open(sheet, { animate, pushed }) {
   document.documentElement.style.setProperty('--pp-top', CONFIG.top * 100 + 'vh');
-  const wrap = document.createElement('div'); wrap.className = 'pp';
-  const line = document.createElement('div'); line.className = 'pp_line';
+  const wrap = document.createElement('div'); wrap.className = 'cpp';
+  const line = document.createElement('div'); line.className = 'cpp_line';
   wrap.append(sheet, line); document.body.appendChild(wrap);
   document.documentElement.classList.add('project-open');
   pageLenis?.stop();
@@ -66,7 +66,7 @@ export function initProjectPage() {
   if (own) {
     // Direct bezoek: home erachter zetten
     open(own, { animate: false, pushed: false });
-    const bg = document.createElement('div'); bg.className = 'pp_home'; bg.inert = true;
+    const bg = document.createElement('div'); bg.className = 'cpp_home'; bg.inert = true;
     document.body.prepend(bg);
     load('/').then((doc) => {
       doc.querySelectorAll('script, [data-project-page]').forEach((n) => n.remove());
