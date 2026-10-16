@@ -8,11 +8,12 @@
 //  - Scrollen: het logo vliegt in één vloeiende beweging naar het gele vak van de menu-balk.
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/+esm';
 import { SVGLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/SVGLoader.js/+esm';
-import { ticker, pointer, reduceMotion, viewW, viewH, clamp, lerp, easeInOutQuart, easeInOutCubic, spring } from '../lib/core.js';
+import { onFrame, pointer, reduceMotion, viewW, viewH } from '../lib/core.js';
+import { TAU, clamp, lerp, easeInOutQuart, easeInOutCubic, follow, spring, nextFront } from '../lib/math.js';
 import { parallaxState } from './parallax.js';
 
 /* ===== INSTELLINGEN ===== */
-export const LOGO_CONFIG = {
+const C = {
   bodyColor:   '#0E0E10', // kleur van het logo
   eyeColor:    '#FFFFFF', // oogwit
   edgeColor:   '#E0DED9', // lichte randlijnen bij kantelen
@@ -50,9 +51,7 @@ const SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 386">' +
 const EYE = { left: -32, center: 34.18, right: 125.02 };    // links = exact het logo
 const PUP = { rest: 72.7, center: 94.44, min: 50, max: 130 }; // binnen deze grenzen raakt de pupil nooit de rand
 
-export function initLogo3d({ anchor, trigger, hero, menu, config = {} }) {
-  const C = { ...LOGO_CONFIG, ...config };
-
+export function initLogo3d({ anchor, trigger, menu }) {
   // --- Canvas over het hele scherm ---
   const holder = document.createElement('div');
   holder.className = 'champie-3d';
@@ -117,14 +116,10 @@ export function initLogo3d({ anchor, trigger, hero, menu, config = {} }) {
   // --- Moment van de overgang naar het menu: trigger half uit beeld ---
   let morphStart = 0;
   function measure() {
-    if (trigger) {
-      const pt = trigger.style.transform; trigger.style.transform = 'none';
-      const r = trigger.getBoundingClientRect();
-      morphStart = Math.max(1, (r.top + r.bottom) / 2 + window.scrollY) / (1 - parallaxState.heroSpeed);
-      trigger.style.transform = pt;
-    } else {
-      morphStart = (hero?.offsetHeight || window.innerHeight) * 0.25;
-    }
+    const pt = trigger.style.transform; trigger.style.transform = 'none'; // meten zonder parallax
+    const r = trigger.getBoundingClientRect();
+    morphStart = Math.max(1, (r.top + r.bottom) / 2 + window.scrollY) / (1 - parallaxState.heroSpeed);
+    trigger.style.transform = pt;
   }
   function resize() {
     renderer.setSize(viewW(), viewH(), false);
@@ -137,7 +132,6 @@ export function initLogo3d({ anchor, trigger, hero, menu, config = {} }) {
   resize();
 
   // --- Status ---
-  const TAU = Math.PI * 2;
   const spinSpeed = (a) => C.spinSlow + (C.spinFast - C.spinSlow) * Math.pow((1 - Math.cos(a)) / 2, 2);
   const spinS = { x: 0, v: 0 };          // draaihoek (0 = voorkant)
   const eyeS = { x: EYE.left, v: 0 };    // stand van het oog op het gezicht
@@ -147,13 +141,13 @@ export function initLogo3d({ anchor, trigger, hero, menu, config = {} }) {
   let rx = 0, ry = 0;
   let morph = window.scrollY >= morphStart ? 1 : 0; // 0 = groot, 1 = in het menu
 
-  ticker.add((now, dt) => {
+  onFrame((now, dt) => {
     const vw = viewW(), vh = viewH();
     if (renderer.domElement.width !== Math.floor(vw * renderer.getPixelRatio())) resize();
 
     // Overgang groot -> menu: speelt in één keer af
     const target = window.scrollY >= morphStart ? 1 : 0;
-    menu?.setVisible(target === 1);
+    menu.setVisible(target === 1);
     morph = reduceMotion ? target : target > morph ? Math.min(1, morph + dt / C.morphTime) : Math.max(0, morph - dt / C.morphTime);
     const p = easeInOutQuart(morph);
     const py = easeInOutCubic(morph); // y iets eerder dan x = zachte boog
@@ -161,7 +155,7 @@ export function initLogo3d({ anchor, trigger, hero, menu, config = {} }) {
     const a = anchor.getBoundingClientRect();
     const startH = a.height * C.logoHeight;
     const startY = a.top + a.height * C.logoCenterY + parallaxState.heroShift;
-    const end = menu ? menu.boxCenter() : { x: vw / 2, y: vh - 40 };
+    const end = menu.boxCenter();
     const h = lerp(startH, C.smallHeight, p);
     const cx = lerp(vw / 2, end.x, p);
     const cy = lerp(startY, end.y, py);
@@ -171,17 +165,15 @@ export function initLogo3d({ anchor, trigger, hero, menu, config = {} }) {
     // Kantelen naar de cursor
     const tx = pointer.active ? clamp((pointer.x - cx) / (vw / 2)) : 0;
     const ty = pointer.active ? clamp((pointer.y - cy) / (vh / 2)) : 0;
-    ry += (tx * C.maxTilt - ry) * C.tiltEase;
-    rx += (ty * C.maxTilt - rx) * C.tiltEase;
+    const k = follow(C.tiltEase, dt);
+    ry += (tx * C.maxTilt - ry) * k;
+    rx += (ty * C.maxTilt - rx) * k;
 
     // Draaien in rust; bij muisbeweging versneld door naar de voorkant
     const stillFor = now - pointer.lastMove;
     const spinning = !reduceMotion && C.spin && (!pointer.active || stillFor > C.spinDelay * 1000);
     if (spinning && !wasSpinning) spinRamp = 0;
-    if (!spinning && wasSpinning) {
-      const rest = spinS.x % TAU;
-      homeTarget = spinS.x - rest + (rest < 0.5 ? 0 : TAU); // net voorbij de voorkant? terug; anders door naar voren
-    }
+    if (!spinning && wasSpinning) homeTarget = nextFront(spinS.x);
     wasSpinning = spinning;
     if (spinning) {
       spinRamp = Math.min(1, spinRamp + dt / 1.2);

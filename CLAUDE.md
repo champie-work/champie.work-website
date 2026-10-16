@@ -15,7 +15,8 @@ Code for the animations and interaction on champie.work. The site itself is buil
 
 ## Conventions
 - Elements are found by `data-*` attributes, never by Webflow class names (see README).
-- All animation runs through the single `ticker` in `src/lib/core.js`; mouse state comes from `pointer`.
+- All animation runs through `onFrame` in `src/lib/core.js`; mouse state comes from `pointer`. Pure math lives in `src/lib/math.js` and has tests (`node --test test/math.test.mjs`).
+- Follow the Ponytail rules: smallest complete change, no options nobody asked for.
 - Respect `reduceMotion`.
 - Settings that the owner may want to tweak live in a CONFIG object at the top of a module.
 - The owner writes in Dutch; code comments are in Dutch.

@@ -1,33 +1,30 @@
 // Parallax
-//  [data-hero]                 de header (bepaalt hoe lang het effect duurt)
-//  [data-parallax-hero]        lagen in de header die trager meebewegen
-//                              data-parallax-speed="0.3" (0 = normaal, 1 = staat stil)
-//  [data-parallax-img]         foto die binnen zijn kader schuift (kader heeft overflow: hidden)
-//                              data-parallax-range="10" (procent op en neer)
-import { ticker, reduceMotion, num } from '../lib/core.js';
+//  [data-hero]           de header (bepaalt hoe lang het effect duurt)
+//  [data-parallax-hero]  lagen in de header die trager meebewegen
+//  [data-parallax-img]   foto die binnen zijn kader schuift (kader heeft overflow: hidden)
+import { onFrame, reduceMotion } from '../lib/core.js';
 
-// Gedeeld met andere modules (het 3D-logo beweegt mee met de header)
-export const parallaxState = { heroShift: 0, heroSpeed: 0 };
+const HERO_SPEED = reduceMotion ? 0 : 0.3; // 0 = normaal scrollen, 1 = staat stil
+const IMG_RANGE = 10;                       // procent dat een foto op en neer schuift
+
+// Het 3D-logo beweegt mee met de header
+export const parallaxState = { heroShift: 0, heroSpeed: HERO_SPEED };
 
 export function initParallax() {
   const hero = document.querySelector('[data-hero]') || document.body;
-  const layers = [...document.querySelectorAll('[data-parallax-hero]')];
-  const imgs = [...document.querySelectorAll('[data-parallax-img]')];
-  const speed = reduceMotion ? 0 : num(layers[0], 'data-parallax-speed', 0.3);
-  parallaxState.heroSpeed = speed;
+  const layers = document.querySelectorAll('[data-parallax-hero]');
+  const imgs = document.querySelectorAll('[data-parallax-img]');
 
-  ticker.add(() => {
-    const sy = window.scrollY;
-    parallaxState.heroShift = Math.min(sy, hero.offsetHeight) * speed;
-    const t = `translate3d(0, ${parallaxState.heroShift}px, 0)`;
-    for (const l of layers) l.style.transform = t;
+  onFrame(() => {
+    parallaxState.heroShift = Math.min(window.scrollY, hero.offsetHeight) * HERO_SPEED;
+    for (const l of layers) l.style.transform = `translate3d(0, ${parallaxState.heroShift}px, 0)`;
     if (reduceMotion) return;
     const vh = window.innerHeight;
     for (const img of imgs) {
       const r = img.parentElement.getBoundingClientRect();
       if (r.bottom < -50 || r.top > vh + 50) continue;
       const p = (vh - r.top) / (vh + r.height); // 0 = komt binnen onderaan, 1 = verdwijnt bovenaan
-      img.style.transform = `translate3d(0, ${(p - 0.5) * 2 * num(img, 'data-parallax-range', 10)}%, 0)`;
+      img.style.transform = `translate3d(0, ${(p - 0.5) * 2 * IMG_RANGE}%, 0)`;
     }
   });
 }

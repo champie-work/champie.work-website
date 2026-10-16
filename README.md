@@ -20,8 +20,8 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | Attribuut | Op welk element | Wat het doet |
 |---|---|---|
 | `data-hero` | de header-sectie | bepaalt hoe lang de header-parallax duurt |
-| `data-parallax-hero` | lagen in de header (woordmerk, nav-rij, onderste rij) | bewegen trager mee; `data-parallax-speed="0.3"` op de eerste laag |
-| `data-parallax-img` | foto in een kader met `overflow: hidden` | schuift binnen het kader; `data-parallax-range="10"` |
+| `data-parallax-hero` | lagen in de header (woordmerk, nav-rij, onderste rij) | bewegen trager mee (snelheid: `HERO_SPEED` in `parallax.js`) |
+| `data-parallax-img` | foto in een kader met `overflow: hidden` | schuift binnen het kader (`IMG_RANGE` in `parallax.js`) |
 | `data-logo3d` | het vak waar het grote 3D-logo staat | 3D-logo (draait in rust, volgt de muis, vliegt naar het menu) |
 | `data-logo3d-trigger` | het woordmerk | half uit beeld = logo vliegt naar het menu |
 | `data-project` | projectkaart | hover-effecten |
@@ -30,15 +30,23 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-media` | fotokader van de kaart | kleine zwevende kopie van de foto volgt de cursor |
 | `data-eye` | een oog-SVG in tekst | pupil kijkt horizontaal mee binnen het wit |
 
-De menu-balk zet het script zelf op de pagina. Openen geeft `<html>` de class `menu-open`.
+De menu-balk zet het script zelf op de pagina, samen met het 3D-logo. Openen geeft `<html>` de class `menu-open`.
+
+## Testen
+
+```
+node --test test/math.test.mjs
+```
 
 ## Bestanden
 
 ```
+test/math.test.mjs        tests voor lib/math.js
 src/
   main.js                 startpunt, zet de modules aan
   champie.css             stijlen voor alles hieronder
-  lib/core.js             één animatie-loop, muisstatus, veer en kleine helpers
+  lib/core.js             één animatie-loop en de muisstatus
+  lib/math.js             veer, easing en andere rekenhulpjes (getest)
   modules/
     smooth-scroll.js      Lenis
     parallax.js           header-parallax en foto-parallax

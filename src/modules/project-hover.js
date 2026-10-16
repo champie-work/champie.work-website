@@ -3,7 +3,8 @@
 //  [data-project-title]    titel; data-hover-title="..." = tekst die bij hover inrolt (met pijl)
 //  [data-project-arrow]    (optioneel) de pijl; zonder eigen pijl wordt de eerste gekopieerd
 //  [data-project-media]    fotokader; bij hover zweeft er een kleine kopie van de foto mee met de cursor
-import { ticker } from '../lib/core.js';
+import { onFrame } from '../lib/core.js';
+import { follow } from '../lib/math.js';
 
 const FOLLOW = { size: 0.24, offset: 14, ease: 0.16, scaleEase: 0.14 };
 
@@ -52,11 +53,12 @@ export function initProjectHover() {
     followers.push(f);
   });
 
-  if (followers.length) ticker.add(() => {
+  onFrame((now, dt) => {
+    const k = follow(FOLLOW.ease, dt), ks = follow(FOLLOW.scaleEase, dt);
     for (const f of followers) {
-      f.x += (f.tx - f.x) * FOLLOW.ease;
-      f.y += (f.ty - f.y) * FOLLOW.ease;
-      f.s += (f.ts - f.s) * FOLLOW.scaleEase;
+      f.x += (f.tx - f.x) * k;
+      f.y += (f.ty - f.y) * k;
+      f.s += (f.ts - f.s) * ks;
       if (f.ts === 0 && f.s < 0.005) f.s = 0;
       f.box.style.transform = `translate3d(${f.x}px, ${f.y}px, 0) scale(${f.s})`;
     }
