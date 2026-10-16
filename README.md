@@ -32,9 +32,10 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-services` | de rij van het dienstenblok | grens waarbinnen de sticky delen meebewegen (leeslijn: `CONFIG.line` in `services.js`) |
 | `data-services-sticky` | linkerkolom en het nummer-vak | plakken tijdens het scrollen |
 | `data-service` | een categorie | krijgt `is-active` als een dienst erin op de leeslijn staat |
-| `data-service-mark` | het witte vierkantje in een categorie | alleen zichtbaar bij de actieve categorie |
+| `data-service-mark` | het witte vierkantje in een categorie | plakt mee; groeit in bij de actieve categorie |
+| `data-service-name` | de naam van een categorie | plakt mee binnen de eigen categorie |
 | `data-service-item` | één dienst-regel | telt mee voor het nummer |
-| `data-service-count` | het nummer rechts | toont het nummer van de actieve dienst |
+| `data-service-count` | het nummer rechts | nummer van de actieve dienst, rolt als kilometerteller (`CONFIG.roll`) |
 
 De menu-balk zet het script zelf op de pagina, samen met het 3D-logo. Openen geeft `<html>` de class `menu-open`.
 
