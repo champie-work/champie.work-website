@@ -55,7 +55,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
   // --- Canvas over het hele scherm ---
   const holder = document.createElement('div');
   holder.className = 'champie-3d';
-  anchor.appendChild(holder);
+  (anchor || document.body).appendChild(holder); // zonder header-vak (projectpagina): logo staat meteen in het menu
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -116,6 +116,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
   // --- Moment van de overgang naar het menu: trigger half uit beeld ---
   let morphStart = 0;
   function measure() {
+    if (!trigger) return;
     const pt = trigger.style.transform; trigger.style.transform = 'none'; // meten zonder parallax
     const r = trigger.getBoundingClientRect();
     morphStart = Math.max(1, (r.top + r.bottom) / 2 + window.scrollY) / (1 - parallaxState.heroSpeed);
@@ -139,20 +140,21 @@ export function initLogo3d({ anchor, trigger, menu }) {
   let spinRamp = 0, wasSpinning = false, homeTarget = 0;
   let saccade = 0, nextSaccade = 1.5;
   let rx = 0, ry = 0;
-  let morph = window.scrollY >= morphStart ? 1 : 0; // 0 = groot, 1 = in het menu
+  // In het menu: voorbij de trigger, op een pagina zonder header-vak, of als een projectvel open is
+  const inMenu = () => !anchor || !trigger || document.documentElement.classList.contains('project-open') || window.scrollY >= morphStart;
+  let morph = inMenu() ? 1 : 0; // 0 = groot, 1 = in het menu
 
   onFrame((now, dt) => {
     const vw = viewW(), vh = viewH();
     if (renderer.domElement.width !== Math.floor(vw * renderer.getPixelRatio())) resize();
 
     // Overgang groot -> menu: speelt in één keer af
-    const target = window.scrollY >= morphStart ? 1 : 0;
-    menu.setVisible(target === 1);
+    const target = inMenu() ? 1 : 0;
     morph = reduceMotion ? target : target > morph ? Math.min(1, morph + dt / C.morphTime) : Math.max(0, morph - dt / C.morphTime);
     const p = easeInOutQuart(morph);
     const py = easeInOutCubic(morph); // y iets eerder dan x = zachte boog
 
-    const a = anchor.getBoundingClientRect();
+    const a = anchor ? anchor.getBoundingClientRect() : { top: 0, height: 0 };
     const startH = a.height * C.logoHeight;
     const startY = a.top + a.height * C.logoCenterY + parallaxState.heroShift;
     const end = menu.boxCenter();

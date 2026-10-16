@@ -1,5 +1,5 @@
 // Menu-balk onderaan in het midden: geel logo-vak + Menu-knop.
-// Wordt door het script zelf op de pagina gezet. Het menu-ontwerp zelf volgt later:
+// Wordt door het script zelf op elke pagina gezet en staat altijd vast in beeld, boven alles. Het menu-ontwerp zelf volgt later:
 // bij openen krijgt <html> de class "menu-open".
 
 const ICON = '<svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M0 0H18V2H0V0ZM0 6H13V8H0V6ZM0 12H8V14H0V12Z" fill="#0E0E10"/></svg>';
@@ -22,8 +22,7 @@ export function initMenu() {
 
   return {
     el: nav,
-    setVisible(on) { nav.classList.toggle('is-on', on); },
-    // Midden van het gele logo-vak, zonder de pop-animatie meegerekend
+    // Midden van het gele logo-vak
     boxCenter() {
       return { x: nav.offsetLeft + box.offsetLeft + box.offsetWidth / 2,
                y: nav.offsetTop + box.offsetTop + box.offsetHeight / 2 };

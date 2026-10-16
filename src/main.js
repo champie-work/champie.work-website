@@ -11,9 +11,8 @@ import { initProjectPage } from './modules/project-page.js';
 initSmoothScroll();
 initParallax();
 
-const anchor = document.querySelector('[data-logo3d]');
-// shortcut: menu bestaat alleen samen met het 3D-logo; een pagina zonder logo heeft nog geen menu
-if (anchor) initLogo3d({ anchor, trigger: document.querySelector('[data-logo3d-trigger]'), menu: initMenu() });
+// Menu + 3D-logo op elke pagina; zonder [data-logo3d] (projectpagina) staat het logo meteen in het menu
+initLogo3d({ anchor: document.querySelector('[data-logo3d]'), trigger: document.querySelector('[data-logo3d-trigger]'), menu: initMenu() });
 
 initProjectHover();
 initEyes();
