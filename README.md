@@ -29,6 +29,12 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-arrow` | de ↳-pijl | pijl in de hovertitel |
 | `data-project-media` | fotokader van de kaart | kleine zwevende kopie van de foto volgt de cursor |
 | `data-eye` | een oog-SVG in tekst | pupil kijkt horizontaal mee binnen het wit |
+| `data-services` | de rij van het dienstenblok | grens waarbinnen de sticky delen meebewegen (leeslijn: `CONFIG.line` in `services.js`) |
+| `data-services-sticky` | linkerkolom en het nummer-vak | plakken tijdens het scrollen |
+| `data-service` | een categorie | krijgt `is-active` als een dienst erin op de leeslijn staat |
+| `data-service-mark` | het witte vierkantje in een categorie | alleen zichtbaar bij de actieve categorie |
+| `data-service-item` | één dienst-regel | telt mee voor het nummer |
+| `data-service-count` | het nummer rechts | toont het nummer van de actieve dienst |
 
 De menu-balk zet het script zelf op de pagina, samen met het 3D-logo. Openen geeft `<html>` de class `menu-open`.
 
@@ -54,4 +60,5 @@ src/
     logo3d.js             3D-logo (Three.js), instellingen bovenin
     project-hover.js      titel-roll en zwevende foto
     eye.js                meekijkend oog in tekst
+    services.js           dienstenblok: sticky, vierkantje, teller
 ```

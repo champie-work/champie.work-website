@@ -5,6 +5,7 @@ import { initMenu } from './modules/menu.js';
 import { initLogo3d } from './modules/logo3d.js';
 import { initProjectHover } from './modules/project-hover.js';
 import { initEyes } from './modules/eye.js';
+import { initServices } from './modules/services.js';
 
 initSmoothScroll();
 initParallax();
@@ -15,3 +16,4 @@ if (anchor) initLogo3d({ anchor, trigger: document.querySelector('[data-logo3d-t
 
 initProjectHover();
 initEyes();
+initServices();
