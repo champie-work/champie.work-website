@@ -55,7 +55,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
   // --- Canvas over het hele scherm ---
   const holder = document.createElement('div');
   holder.className = 'champie-3d';
-  (anchor || document.body).appendChild(holder); // zonder header-vak (projectpagina): logo staat meteen in het menu
+  document.body.appendChild(holder); // in body, anders kan het niet boven het projectvel
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
