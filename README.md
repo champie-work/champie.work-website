@@ -22,9 +22,8 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-hero` | de header-sectie | bepaalt hoe lang de header-parallax duurt |
 | `data-parallax-hero` | lagen in de header (woordmerk, nav-rij, onderste rij) | bewegen trager mee (snelheid: `HERO_SPEED` in `parallax.js`) |
 | `data-parallax-img` | foto in een kader met `overflow: hidden` | schuift binnen het kader (`IMG_RANGE` in `parallax.js`) |
-| `data-logo3d` | het vak waar het grote 3D-logo staat | 3D-logo (draait in rust, volgt de muis, rolt naar linksboven in de balk) |
-| `data-logo3d-trigger` | het woordmerk | half uit beeld = logo rolt naar de balk, balk wordt zwart |
-| `data-nav` | de nav-links (Projects, About, ...) | gaat in de vaste balk bovenin, wit zodra de balk zwart is (`header.js`) |
+| `data-logo3d` | het vak waar het grote 3D-logo staat | 3D-logo (draait in rust, volgt de muis, vliegt naar het menu) |
+| `data-logo3d-trigger` | het woordmerk | half uit beeld = logo vliegt naar het menu |
 | `data-project` | projectkaart | hover-effecten |
 | `data-project-title` | titel in de kaart | rolt bij hover naar `data-hover-title="..."` |
 | `data-project-arrow` | de ↳-pijl | pijl in de hovertitel |
@@ -40,7 +39,7 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
 | `data-grow` | beeld in een projectpagina | begint klein (`CONFIG.grow`) en wordt volle maat tijdens scrollen |
 
-De vaste balk en het 3D-logo zet het script zelf op elke pagina. Home: de balk wordt zwart als het logo erin rolt. Projectpagina (geen `data-logo3d`): balk zwart en logo linksboven meteen, zonder animatie.
+De menu-balk en het 3D-logo zet het script zelf op elke pagina. Home: het menu verschijnt als het logo erin vliegt. Projectpagina (geen `data-logo3d`): menu en logo staan er meteen, zonder animatie, boven het vel. Openen geeft `<html>` de class `menu-open`.
 
 ## Testen
 
