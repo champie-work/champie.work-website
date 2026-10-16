@@ -49,6 +49,8 @@ html.lenis, html.lenis body { height: auto; }
 
 /* ===== Projectpagina: vel over de wazige homepage (project-page.js) ===== */
 .cpp { position: fixed; inset: 0; z-index: 60; overflow-y: auto; overscroll-behavior: contain; background: rgba(14,14,16,0); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); transition: background .9s ease, backdrop-filter .9s ease, -webkit-backdrop-filter .9s ease; }
+.cpp { scrollbar-width: none; }
+.cpp::-webkit-scrollbar { display: none; }
 .cpp.is-in { background: rgba(14,14,16,.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .cpp [data-project-page] { margin-top: var(--pp-top, 27vh); min-height: calc(100vh - var(--pp-top, 27vh)); transform: translateY(100vh); transition: transform .9s cubic-bezier(.76,0,.24,1); }
 .cpp.is-in [data-project-page] { transform: none; }
