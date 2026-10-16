@@ -10,10 +10,14 @@ const IMG_RANGE = 10;                       // procent dat een foto op en neer s
 // Het 3D-logo beweegt mee met de header
 export const parallaxState = { heroShift: 0, heroSpeed: HERO_SPEED };
 
+const imgs = [];
+// Later toegevoegde foto's (bv. in een projectvel) doen ook mee
+export const addParallaxImgs = (list) => { for (const img of list) if (!imgs.includes(img)) imgs.push(img); };
+
 export function initParallax() {
   const hero = document.querySelector('[data-hero]') || document.body;
   const layers = document.querySelectorAll('[data-parallax-hero]');
-  const imgs = document.querySelectorAll('[data-parallax-img]');
+  addParallaxImgs(document.querySelectorAll('[data-parallax-img]'));
 
   onFrame(() => {
     parallaxState.heroShift = Math.min(window.scrollY, hero.offsetHeight) * HERO_SPEED;
@@ -21,6 +25,7 @@ export function initParallax() {
     if (reduceMotion) return;
     const vh = window.innerHeight;
     for (const img of imgs) {
+      if (!img.isConnected) continue;
       const r = img.parentElement.getBoundingClientRect();
       if (r.bottom < -50 || r.top > vh + 50) continue;
       const p = (vh - r.top) / (vh + r.height); // 0 = komt binnen onderaan, 1 = verdwijnt bovenaan

@@ -35,6 +35,9 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-service-name` | de naam van een categorie | rijdt mee op de leeslijn binnen de eigen categorie |
 | `data-service-item` | één dienst-regel | telt mee voor het nummer |
 | `data-service-count` | het nummer rechts | nummer van de actieve dienst, rolt als kilometerteller (`CONFIG.roll`) |
+| `data-project-page="naam"` | wrapper om een hele projectpagina | vel schuift over de wazige homepage; lijn rechts toont hoe ver je bent (`project-page.js`) |
+| `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
+| `data-grow` | beeld in een projectpagina | begint klein (`CONFIG.grow`) en wordt volle maat tijdens scrollen |
 
 De menu-balk zet het script zelf op de pagina, samen met het 3D-logo. Openen geeft `<html>` de class `menu-open`.
 
@@ -61,4 +64,5 @@ src/
     project-hover.js      titel-roll en zwevende foto
     eye.js                meekijkend oog in tekst
     services.js           dienstenblok: sticky, vierkantje, teller
+    project-page.js       projectpagina als vel over de wazige homepage
 ```

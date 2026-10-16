@@ -6,6 +6,7 @@ import { initLogo3d } from './modules/logo3d.js';
 import { initProjectHover } from './modules/project-hover.js';
 import { initEyes } from './modules/eye.js';
 import { initServices } from './modules/services.js';
+import { initProjectPage } from './modules/project-page.js';
 
 initSmoothScroll();
 initParallax();
@@ -17,3 +18,4 @@ if (anchor) initLogo3d({ anchor, trigger: document.querySelector('[data-logo3d-t
 initProjectHover();
 initEyes();
 initServices();
+initProjectPage();
