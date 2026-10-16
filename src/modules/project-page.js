@@ -93,10 +93,8 @@ export function initProjectPage() {
     if (!view) return;
     const { wrap, sheet, line, grows } = view;
     view.lenis?.raf(now);
-    // Lijn rechts: groeit mee met hoe ver je gelezen hebt
-    const max = wrap.scrollHeight - wrap.clientHeight;
+    // Lijn rechts: vaste lijn langs het vel (begint bij de bovenrand van het vel)
     line.style.top = Math.max(20, sheet.getBoundingClientRect().top + 20) + 'px';
-    line.style.setProperty('--p', max > 0 ? clamp(wrap.scrollTop / max, 0, 1) : 1);
     // Groeibeeld: klein als het onderaan binnenkomt, volle maat als de bovenkant bij 10% van het scherm is
     const vh = wrap.clientHeight;
     for (const g of grows) {
