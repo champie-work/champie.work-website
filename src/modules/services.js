@@ -31,7 +31,7 @@ export function initServices() {
   // Genoeg ruimte onder de rij zodat ook de laatste dienst de leeslijn haalt (de pagina houdt daar op)
   const below = parseFloat(getComputedStyle(row.parentElement).paddingBottom) || 0;
   const last = items[items.length - 1].offsetHeight;
-  row.style.marginBottom = `max(0px, calc(${100 - CONFIG.line * 100}vh - ${below + last}px))`;
+  row.style.marginBottom = `max(0px, calc(${100 - CONFIG.line * 100}vh - ${below + last - 2}px))`; // 2px extra: laatste regel gaat echt over de lijn
 
   // Teller: één kolom per cijfer, voorloopnul blijft leeg
   const digits = String(items.length).length;
