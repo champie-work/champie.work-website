@@ -52,9 +52,13 @@ export function initServices() {
   };
   show(items[0]);
 
-  // Dunne lijn op CONFIG.line: de regel die hem raakt wordt actief (geen scroll-loop nodig)
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries) if (e.isIntersecting) show(e.target);
-  }, { rootMargin: `-${CONFIG.line * 100}% 0px -${100 - CONFIG.line * 100 - 0.1}% 0px` });
+  // Zone = alles boven de leeslijn. Elke regel die de lijn kruist meldt zich, ook bij snel scrollen;
+  // actief = de laatste regel die boven de lijn staat (geen scroll-loop nodig)
+  const update = () => {
+    const y = window.innerHeight * CONFIG.line;
+    const n = items.filter((el) => el.getBoundingClientRect().top < y).length;
+    show(items[Math.max(0, n - 1)]);
+  };
+  const io = new IntersectionObserver(update, { rootMargin: `100000px 0px -${100 - CONFIG.line * 100}% 0px` });
   items.forEach((el) => io.observe(el));
 }
