@@ -9,7 +9,8 @@ requestAnimationFrame(function loop(now) {
   requestAnimationFrame(loop);
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  for (const fn of subs) fn(now, dt);
+  // Eén kapotte module mag de rest niet stilzetten
+  for (const fn of subs) try { fn(now, dt); } catch (e) { console.error(e); }
 });
 export const onFrame = (fn) => subs.push(fn);
 
