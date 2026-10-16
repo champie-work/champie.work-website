@@ -187,16 +187,16 @@ export function initLogo3d({ anchor, trigger, menu }) {
     logo.rotation.set(rx * front, spinS.x + ry, 0);
 
     // Oog: schuift over het gezicht als de muis beweegt; tijdens draaien de logo-stand
-    const follow = pointer.active && !spinning;
-    const eyeTarget = !follow ? EYE.left : tx < 0 ? lerp(EYE.center, EYE.left, -tx) : lerp(EYE.center, EYE.right, tx);
+    const tracking = pointer.active && !spinning;
+    const eyeTarget = !tracking ? EYE.left : tx < 0 ? lerp(EYE.center, EYE.left, -tx) : lerp(EYE.center, EYE.right, tx);
     const idle = stillFor > 1200;
     nextSaccade -= dt;
     if (nextSaccade <= 0) {
-      saccade = idle && follow && !reduceMotion ? (Math.random() * 2 - 1) * C.saccade : 0;
+      saccade = idle && tracking && !reduceMotion ? (Math.random() * 2 - 1) * C.saccade : 0;
       nextSaccade = 0.9 + Math.random() * 2.2;
     }
-    if (!idle || !follow) saccade = 0;
-    const pupTarget = clamp((!follow ? PUP.rest : PUP.center + tx * C.pupilRange) + saccade, PUP.min, PUP.max);
+    if (!idle || !tracking) saccade = 0;
+    const pupTarget = clamp((!tracking ? PUP.rest : PUP.center + tx * C.pupilRange) + saccade, PUP.min, PUP.max);
     if (reduceMotion) { eyeS.x = eyeTarget; pupS.x = pupTarget; }
     else { spring(eyeS, eyeTarget, C.eyeSpeed, dt); spring(pupS, pupTarget, C.pupilSpeed, dt); }
     eye.position.x = eyeS.x;
