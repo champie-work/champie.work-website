@@ -36,12 +36,9 @@ html.lenis, html.lenis body { height: auto; }
 .project_follow img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (hover: none) { .project_follow { display: none; } }
 
-/* ===== Diensten: plakken, één vierkantje tegelijk, rollende teller ===== */
-[data-services] { align-items: stretch; }
-[data-services-sticky] { position: sticky; top: var(--services-top, 30vh); align-self: flex-start; }
-[data-service-name] { position: sticky; top: var(--services-top, 30vh); }
-/* 5px = marge van het vierkantje in het ontwerp, zodat het op de naam blijft uitlijnen */
-[data-service-mark] { position: sticky; top: calc(var(--services-top, 30vh) + 5px); opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .4s cubic-bezier(.22,1,.36,1); }
+/* ===== Diensten: rij staat vast (top via services.js), één vierkantje tegelijk, rollende teller ===== */
+[data-services] { position: sticky; }
+[data-service-mark] { opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .4s cubic-bezier(.22,1,.36,1); }
 [data-service].is-active [data-service-mark] { opacity: 1; transform: none; }
 [data-service-count] { display: inline-flex; font-variant-numeric: tabular-nums; }
 .odo { display: inline-grid; overflow: hidden; }

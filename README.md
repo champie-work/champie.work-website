@@ -29,11 +29,10 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-arrow` | de ↳-pijl | pijl in de hovertitel |
 | `data-project-media` | fotokader van de kaart | kleine zwevende kopie van de foto volgt de cursor |
 | `data-eye` | een oog-SVG in tekst | pupil kijkt horizontaal mee binnen het wit |
-| `data-services` | de rij van het dienstenblok | grens waarbinnen de sticky delen meebewegen (leeslijn: `CONFIG.line` in `services.js`) |
-| `data-services-sticky` | linkerkolom en het nummer-vak | plakken tijdens het scrollen |
+| `data-services` | de rij van het dienstenblok | staat vast in beeld; elke dienst krijgt `CONFIG.step` px scroll (`services.js`) |
 | `data-service` | een categorie | krijgt `is-active` als een dienst erin op de leeslijn staat |
-| `data-service-mark` | het witte vierkantje in een categorie | plakt mee; groeit in bij de actieve categorie |
-| `data-service-name` | de naam van een categorie | plakt mee binnen de eigen categorie |
+| `data-service-mark` | het witte vierkantje in een categorie | rijdt mee met de naam; groeit in bij de actieve categorie |
+| `data-service-name` | de naam van een categorie | rijdt mee op de leeslijn binnen de eigen categorie |
 | `data-service-item` | één dienst-regel | telt mee voor het nummer |
 | `data-service-count` | het nummer rechts | nummer van de actieve dienst, rolt als kilometerteller (`CONFIG.roll`) |
 

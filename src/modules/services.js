@@ -1,13 +1,16 @@
-// Diensten-blok: linkerkolom en nummer blijven plakken (CSS sticky), vierkantje en nummer volgen de dienst op de leeslijn
-//  [data-services]         de rij met de drie delen (stopt het plakken onderaan)
-//  [data-services-sticky]  linkerkolom en het nummer: plakken tijdens het scrollen
-//  [data-service]          een categorie;  [data-service-mark] het vierkantje, [data-service-name] de naam (plakken binnen hun categorie)
-//  [data-service-item]     een dienst-regel;  [data-service-count] het nummer (rolt als een kilometerteller)
-import { reduceMotion } from '../lib/core.js';
+// Diensten-blok: de rij staat vast in beeld, elke dienst krijgt een eigen stukje scroll.
+// De lijst schuift per dienst één regel op (veer), naam + vierkantje rijden mee binnen hun categorie.
+//  [data-services]        de rij met de drie delen (wordt vastgezet)
+//  [data-service]         een categorie;  [data-service-mark] het vierkantje, [data-service-name] de naam
+//  [data-service-item]    een dienst-regel;  [data-service-count] het nummer (rolt als een kilometerteller)
+import { onFrame, reduceMotion } from '../lib/core.js';
+import { clamp, spring } from '../lib/math.js';
 
-// line: leeslijn en plakhoogte, als deel van de schermhoogte (0 = bovenkant)
-// roll: duur van het rollen van een cijfer in ms
-const CONFIG = { line: 0.3, roll: 500 };
+// line:  leeslijn, als deel van de schermhoogte (0 = bovenkant)
+// step:  scroll-afstand per dienst in px (hoger = rustiger)
+// speed: veer van de lijst (hoger = sneller naar de volgende regel)
+// roll:  duur van het rollen van een cijfer in ms
+const CONFIG = { line: 0.3, step: 80, speed: 14, roll: 500 };
 
 // Kilometerteller: het oude cijfer schuift weg, het nieuwe komt erachteraan (omhoog bij optellen, omlaag bij aftellen)
 function roll(col, ch, up) {
@@ -27,11 +30,38 @@ export function initServices() {
   const items = row ? [...row.querySelectorAll('[data-service-item]')] : [];
   if (!items.length) return;
   const count = row.querySelector('[data-service-count]');
-  row.style.setProperty('--services-top', `${CONFIG.line * 100}vh`);
-  // Genoeg ruimte onder de rij zodat ook de laatste dienst de leeslijn haalt (de pagina houdt daar op)
-  const below = parseFloat(getComputedStyle(row.parentElement).paddingBottom) || 0;
-  const last = items[items.length - 1].offsetHeight;
-  row.style.marginBottom = `max(0px, calc(${100 - CONFIG.line * 100}vh - ${below + last - 2}px))`; // 2px extra: laatste regel gaat echt over de lijn
+  const cats = [...row.querySelectorAll('[data-service]')].map((el) => ({
+    el, name: el.querySelector('[data-service-name]'), mark: el.querySelector('[data-service-mark]'), top: 0, max: 0,
+  }));
+  const list = cats[0].el.parentElement;
+
+  // Lege ruimte na de rij = de scroll-afstand waarin de rij vaststaat
+  const spacer = document.createElement('div');
+  row.after(spacer);
+
+  let tops = [], pinTop = 0, last = NaN;
+  const measure = () => {
+    list.style.translate = '';
+    cats.forEach((c) => { c.name.style.translate = c.mark.style.translate = ''; });
+    row.style.height = '';
+    const L = list.getBoundingClientRect().top;
+    tops = items.map((el) => el.getBoundingClientRect().top - L);
+    cats.forEach((c) => {
+      const r = c.name.getBoundingClientRect();
+      c.top = r.top - L;
+      c.max = c.el.getBoundingClientRect().bottom - r.bottom;
+    });
+    // Vastzetten zo dat de eerste dienst op de leeslijn staat; de rij eindigt precies onderaan de pagina
+    const H = window.innerHeight;
+    pinTop = H * CONFIG.line - (items[0].getBoundingClientRect().top - row.getBoundingClientRect().top);
+    const below = parseFloat(getComputedStyle(row.parentElement).paddingBottom) || 0;
+    row.style.top = `${pinTop}px`;
+    row.style.height = `${H - pinTop - below}px`;
+    spacer.style.height = `${(items.length - 1) * CONFIG.step}px`;
+    last = NaN;
+  };
+  measure();
+  window.addEventListener('resize', measure);
 
   // Teller: één kolom per cijfer, voorloopnul blijft leeg
   const digits = String(items.length).length;
@@ -40,25 +70,30 @@ export function initServices() {
     count.textContent = '';
     for (let i = 0; i < digits; i++) cols.push(count.appendChild(Object.assign(document.createElement('span'), { className: 'odo' })));
   }
-  let current = 0;
 
-  const show = (item) => {
-    const n = items.indexOf(item) + 1;
-    const s = String(n).padStart(digits, ' ');
-    cols.forEach((c, i) => roll(c, s[i].trim(), n > current));
-    current = n;
-    const cat = item.closest('[data-service]');
-    row.querySelectorAll('[data-service]').forEach((c) => c.classList.toggle('is-active', c === cat));
+  let active = -1;
+  const show = (i) => {
+    const s = String(i + 1).padStart(digits, ' ');
+    cols.forEach((c, k) => roll(c, s[k].trim(), i > active));
+    active = i;
+    const cat = items[i].closest('[data-service]');
+    cats.forEach((c) => c.el.classList.toggle('is-active', c.el === cat));
   };
-  show(items[0]);
 
-  // Zone = alles boven de leeslijn. Elke regel die de lijn kruist meldt zich, ook bij snel scrollen;
-  // actief = de laatste regel die boven de lijn staat (geen scroll-loop nodig)
-  const update = () => {
-    const y = window.innerHeight * CONFIG.line;
-    const n = items.filter((el) => el.getBoundingClientRect().top < y).length;
-    show(items[Math.max(0, n - 1)]);
-  };
-  const io = new IntersectionObserver(update, { rootMargin: `100000px 0px -${100 - CONFIG.line * 100}% 0px` });
-  items.forEach((el) => io.observe(el));
+  const s = { x: 0, v: 0 };
+  onFrame((now, dt) => {
+    // Hoe ver de rij al vaststaat, in diensten (de spacer schuift onder de vaste rij door)
+    const natural = spacer.getBoundingClientRect().top - row.offsetHeight;
+    const i = clamp(Math.round((pinTop - natural) / CONFIG.step), 0, items.length - 1);
+    if (i !== active) show(i);
+
+    const target = tops[i] - tops[0];
+    if (reduceMotion) s.x = target; else spring(s, target, CONFIG.speed, dt);
+    if (Math.abs(target - s.x) < 0.1 && Math.abs(s.v) < 0.1) { s.x = target; s.v = 0; }
+    if (s.x === last) return;
+    last = s.x;
+
+    list.style.translate = `0 ${-s.x}px`;
+    for (const c of cats) c.name.style.translate = c.mark.style.translate = `0 ${clamp(tops[0] + s.x - c.top, 0, c.max)}px`;
+  });
 }
