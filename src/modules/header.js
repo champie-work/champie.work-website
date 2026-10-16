@@ -1,10 +1,12 @@
-// Vaste balk bovenin. De nav ([data-nav]) gaat meteen mee met scrollen;
+// Vaste balk bovenin. De nav ([data-nav]) scrollt mee tot hij de bovenrand raakt en blijft daar staan;
 // zodra het 3D-logo linksboven in rolt, schuift er een zwarte balk achter en wordt de nav wit.
+
+import { onFrame } from '../lib/core.js';
 
 /* ===== INSTELLINGEN ===== */
 const C = {
   logoHeight: 76, // hoogte (px) van het logo linksboven in de balk
-  pad:        20, // ruimte (px) om het logo; balkhoogte = logoHeight + 2 x pad
+  pad:        20, // ruimte (px) om het logo; balkhoogte = logoHeight + 2 x pad; ook de vaste hoogte van de nav
 };
 /* ======================== */
 
@@ -18,9 +20,11 @@ export function initHeader() {
   const nav = document.querySelector('[data-nav]');
   if (nav) {
     const r = nav.getBoundingClientRect();
-    Object.assign(nav.style, { position: 'absolute', top: `${r.top + window.scrollY}px`,
+    const top = r.top + window.scrollY; // plek op de pagina
+    Object.assign(nav.style, { position: 'absolute', top: '0',
       right: `${document.documentElement.clientWidth - r.right}px`, width: `${r.width}px` });
     bar.appendChild(nav);
+    onFrame(() => { nav.style.transform = `translate3d(0, ${Math.max(C.pad, top - window.scrollY)}px, 0)`; });
   }
 
   return {
