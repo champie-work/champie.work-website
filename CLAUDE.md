@@ -28,3 +28,17 @@ Code for the animations and interaction on champie.work. The site itself is buil
 Pick the cheapest agent that fits (`.claude/agents/`): `zoeker` (haiku, low) for lookups, `bouwer` (sonnet, medium) for small changes and publishing, `denker` (opus, high) for 3D logo, scroll, parallax, new animations and hard bugs. If Opus is not available on the plan, set `denker` to `model: sonnet`.
 
 Mijn vaste wens: kies bij elke taak zelf de goedkoopste agent die past, zonder dat ik het vraag. Korte vragen beantwoord je zelf.
+
+## New project page (recipe — keep it cheap)
+Project pages are real Webflow pages in the page folder `project` (folder id `6ad27c85a75671894bdfcbb5`), URL `/project/<name>`. `src/modules/project-page.js` does all the motion; a new project needs NO new code.
+1. Duplicate the Ralph Lauren page (`data_pages_tool > create_page` with `duplicateOf: 6ad27b24fcab3c6bafe951e3`, `parentFolderId` = the folder above, new title + slug).
+2. Change texts and images on the copy. Layout may differ; only keep the attributes:
+   - wrapper `data-project-page="<name>"` directly in body (Ralph Lauren: `805bc9a9-cecc-2b3b-cd2e-b483782c6fa9`)
+   - Close link `data-project-close`, href `/`
+   - photo frame (overflow hidden) with img `data-parallax-img`; grow image wrapper `data-grow`
+   - the loader embed stays the last element in body (Ralph Lauren: `ad1090c7-2678-32d0-4fea-9c11b13bdffe`)
+3. Images: render the Figma node with `get_screenshot`, save the file to `assets/` in this repo, push, then `asset_tool > upload_image_by_url` with the jsDelivr URL of that commit (the proxy blocks direct uploads; asset_tool needs the Webflow Designer tab open — ask the owner). Set the img with key `assetId`.
+4. Home: the project card needs a link to the page (`link` setting, mode `page`, to = page id). Ralph Lauren card link: `60961c34-91ab-30f9-6881-4280739450d5`. Add `data-hover-title` on its `[data-project-title]`.
+5. Both embeds (home + every project page) must carry the same commit hash. Publish, then click the card on the test URL and check console.
+- Never give a Webflow class the names `cpp`, `cpp_line`, `cpp_home` (used by the script).
+- Figma: never call get_metadata on page `0:1` (1.3M chars). Project frames: `374:2094` PROJECTS 1, `381:2261` PROJECTS 2.
