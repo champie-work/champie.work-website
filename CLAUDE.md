@@ -10,8 +10,11 @@ Code for the animations and interaction on champie.work. The site itself is buil
 ## Making a change
 1. Edit the module in `src/`. No build step, plain ES modules. Three.js and Lenis come from jsDelivr `+esm` URLs.
 2. Commit and push to `main`.
-3. Update the commit hash in the Webflow embed (data_element_settings_tool, key `code`) and publish (max once per minute).
-4. Roll back = put the previous commit hash back in the embed.
+3. Warm up jsDelivr first: fetch `src/main.js` and `src/champie.css` at the new commit and check both return 200 (a brand-new commit can fail on first load).
+4. Run `node --test test/math.test.mjs` and `node --check` on changed modules.
+5. Update the commit hash in the Webflow embed (data_element_settings_tool, key `code`) and publish (max once per minute).
+6. After publishing, open the live site and check the browser console for errors.
+7. Roll back = put the previous commit hash back in the embed.
 
 ## Conventions
 - Elements are found by `data-*` attributes, never by Webflow class names (see README).
