@@ -23,3 +23,6 @@ Code for the animations and interaction on champie.work. The site itself is buil
 - Respect `reduceMotion`.
 - Settings that the owner may want to tweak live in a CONFIG object at the top of a module.
 - The owner writes in Dutch; code comments are in Dutch.
+
+## Agents
+Pick the cheapest agent that fits (`.claude/agents/`): `zoeker` (haiku, low) for lookups, `bouwer` (sonnet, medium) for small changes and publishing, `denker` (opus, high) for 3D logo, scroll, parallax, new animations and hard bugs. If Opus is not available on the plan, set `denker` to `model: sonnet`.
