@@ -13,6 +13,10 @@ export function initServices() {
   if (!items.length) return;
   const count = row.querySelector('[data-service-count]');
   row.style.setProperty('--services-top', `${CONFIG.line * 100}vh`);
+  // Genoeg ruimte onder de rij zodat ook de laatste dienst de leeslijn haalt (de pagina houdt daar op)
+  const below = parseFloat(getComputedStyle(row.parentElement).paddingBottom) || 0;
+  const last = items[items.length - 1].offsetHeight;
+  row.style.marginBottom = `max(0px, calc(${100 - CONFIG.line * 100}vh - ${below + last}px))`;
 
   const show = (item) => {
     if (count) count.textContent = items.indexOf(item) + 1;
