@@ -1,11 +1,11 @@
 // 3D-logo (Three.js)
 //  [data-logo3d]          het vak in de header waar het grote logo staat
-//  [data-logo3d-trigger]  zodra dit element half uit beeld is, vliegt het logo naar het menu
+//  [data-logo3d-trigger]  zodra dit element half uit beeld is, rolt het logo naar linksboven in de balk
 //
 // Gedrag:
 //  - In rust draait het hele hoofd rond (voorkant langzaam, achterkant snel); het oog staat stil zoals het logo.
 //  - Muis beweegt: hij draait door naar de voorkant, kantelt naar de cursor en het oog kijkt mee.
-//  - Scrollen: het logo vliegt in één vloeiende beweging naar het gele vak van de menu-balk.
+//  - Scrollen: het logo krimpt en rolt als een wiel naar linksboven in de zwarte balk (header.js).
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/+esm';
 import { SVGLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/SVGLoader.js/+esm';
 import { onFrame, pointer, reduceMotion, viewW, viewH } from '../lib/core.js';
@@ -32,8 +32,8 @@ const C = {
   spinHome:    7,         // hoe snel hij bij muisbeweging doordraait naar de voorkant
   logoHeight:  0.512,     // logohoogte t.o.v. het header-vak
   logoCenterY: 0.58,      // verticale positie in het header-vak (0 = boven, 1 = onder)
-  smallHeight: 25,        // hoogte (px) van het logo in het gele menu-vak
   morphTime:   1.1,       // duur (s) van de overgang groot -> klein
+  rollTurns:   1,         // aantal keer rondrollen op weg naar linksboven
 };
 /* ======================== */
 
@@ -51,7 +51,7 @@ const SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 386">' +
 const EYE = { left: -32, center: 34.18, right: 125.02 };    // links = exact het logo
 const PUP = { rest: 72.7, center: 94.44, min: 50, max: 130 }; // binnen deze grenzen raakt de pupil nooit de rand
 
-export function initLogo3d({ anchor, trigger, menu }) {
+export function initLogo3d({ anchor, trigger, bar }) {
   // --- Canvas over het hele scherm ---
   const holder = document.createElement('div');
   holder.className = 'champie-3d';
@@ -113,7 +113,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
   const edgeMat = new THREE.LineBasicMaterial({ color: new THREE.Color(C.edgeColor), transparent: true, opacity: 0 });
   inner.add(new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 25), edgeMat));
 
-  // --- Moment van de overgang naar het menu: trigger half uit beeld ---
+  // --- Moment van de overgang naar de balk: trigger half uit beeld ---
   let morphStart = 0;
   function measure() {
     if (!trigger) return;
@@ -140,18 +140,17 @@ export function initLogo3d({ anchor, trigger, menu }) {
   let spinRamp = 0, wasSpinning = false, homeTarget = 0;
   let saccade = 0, nextSaccade = 1.5;
   let rx = 0, ry = 0;
-  // In het menu: voorbij de trigger, op een pagina zonder header-vak, of als een projectvel open is
+  // In de balk: voorbij de trigger, op een pagina zonder header-vak, of als een projectvel open is
   const inMenu = () => !anchor || !trigger || document.documentElement.classList.contains('project-open') || window.scrollY >= morphStart;
-  let morph = inMenu() ? 1 : 0; // 0 = groot, 1 = in het menu
-  if (!anchor) menu.el.classList.add('is-on', 'is-static'); // projectpagina: menu meteen vast in beeld
+  let morph = inMenu() ? 1 : 0; // 0 = groot, 1 = in de balk
 
   onFrame((now, dt) => {
     const vw = viewW(), vh = viewH();
     if (renderer.domElement.width !== Math.floor(vw * renderer.getPixelRatio())) resize();
 
-    // Overgang groot -> menu: speelt in één keer af
+    // Overgang groot -> balk: speelt in één keer af
     const target = inMenu() ? 1 : 0;
-    menu.setVisible(target === 1);
+    bar.setDark(target === 1);
     morph = reduceMotion ? target : target > morph ? Math.min(1, morph + dt / C.morphTime) : Math.max(0, morph - dt / C.morphTime);
     const p = easeInOutQuart(morph);
     const py = easeInOutCubic(morph); // y iets eerder dan x = zachte boog
@@ -159,8 +158,8 @@ export function initLogo3d({ anchor, trigger, menu }) {
     const a = anchor ? anchor.getBoundingClientRect() : { top: 0, height: 0 };
     const startH = a.height * C.logoHeight;
     const startY = a.top + a.height * C.logoCenterY + parallaxState.heroShift;
-    const end = menu.boxCenter();
-    const h = lerp(startH, C.smallHeight, p);
+    const end = bar.logoBox();
+    const h = lerp(startH, end.h, p);
     const cx = lerp(vw / 2, end.x, p);
     const cy = lerp(startY, end.y, py);
     logo.scale.setScalar((h * VIEW / vh) / H);
@@ -188,7 +187,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
     }
     if (spinS.x > TAU * 1000) { spinS.x -= TAU * 1000; homeTarget -= TAU * 1000; }
     const front = (1 + Math.cos(spinS.x)) / 2; // 1 = oog naar je toe
-    logo.rotation.set(rx * front, spinS.x + ry, 0);
+    logo.rotation.set(rx * front, spinS.x + ry, p * C.rollTurns * TAU); // rollen: linksom = naar links
 
     // Oog: schuift over het gezicht als de muis beweegt; tijdens draaien de logo-stand
     const tracking = pointer.active && !spinning;
@@ -206,7 +205,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
     eye.position.x = eyeS.x;
     pupil.position.x = clamp(pupS.x, PUP.min, PUP.max);
 
-    edgeMat.opacity = C.edgeOpacity * Math.min(1, Math.max(Math.hypot(rx, ry), Math.abs(Math.sin(spinS.x)), 1 - front) / 0.12);
+    edgeMat.opacity = C.edgeOpacity * Math.min(1, Math.max(Math.hypot(rx, ry), Math.abs(Math.sin(spinS.x)), 1 - front, p) / 0.12); // in de balk: altijd randlijn (zwart op zwart)
     renderer.render(scene, camera);
   });
 }
