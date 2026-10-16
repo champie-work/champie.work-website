@@ -2,7 +2,7 @@
 // De lijst schuift per dienst één regel op (veer), naam + vierkantje rijden mee binnen hun categorie.
 //  [data-services]        de rij met de drie delen (wordt vastgezet)
 //  [data-service]         een categorie;  [data-service-mark] het vierkantje, [data-service-name] de naam
-//  [data-service-item]    een dienst-regel;  [data-service-count] het nummer (rolt als een kilometerteller)
+//  [data-service-item]    een dienst-regel (grijs, de actieve wit);  [data-service-count] het nummer (rolt als een kilometerteller)
 import { onFrame, reduceMotion } from '../lib/core.js';
 import { clamp, spring } from '../lib/math.js';
 
@@ -10,7 +10,7 @@ import { clamp, spring } from '../lib/math.js';
 // step:  scroll-afstand per dienst in px (hoger = rustiger)
 // speed: veer van de lijst (hoger = sneller naar de volgende regel)
 // roll:  duur van het rollen van een cijfer in ms
-const CONFIG = { line: 0.3, step: 80, speed: 14, roll: 500 };
+const CONFIG = { line: 0.3, step: 60, speed: 18, roll: 500 };
 
 // Kilometerteller: het oude cijfer schuift weg, het nieuwe komt erachteraan (omhoog bij optellen, omlaag bij aftellen)
 function roll(col, ch, up) {
@@ -75,6 +75,8 @@ export function initServices() {
   const show = (i) => {
     const s = String(i + 1).padStart(digits, ' ');
     cols.forEach((c, k) => roll(c, s[k].trim(), i > active));
+    items[active]?.classList.remove('is-current');
+    items[i].classList.add('is-current');
     active = i;
     const cat = items[i].closest('[data-service]');
     cats.forEach((c) => c.el.classList.toggle('is-active', c.el === cat));

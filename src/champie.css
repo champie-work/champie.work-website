@@ -40,6 +40,8 @@ html.lenis, html.lenis body { height: auto; }
 [data-services] { position: sticky; }
 [data-service-mark] { opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .4s cubic-bezier(.22,1,.36,1); }
 [data-service].is-active [data-service-mark] { opacity: 1; transform: none; }
+[data-service-item] { color: #4a4a4a; transition: color .35s ease; }
+[data-service-item].is-current { color: #fff; }
 [data-service-count] { display: inline-flex; font-variant-numeric: tabular-nums; }
 .odo { display: inline-grid; overflow: hidden; }
 .odo > span { grid-area: 1 / 1; }
