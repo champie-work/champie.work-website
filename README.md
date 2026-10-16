@@ -39,7 +39,7 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
 | `data-grow` | beeld in een projectpagina | begint klein (`CONFIG.grow`) en wordt volle maat tijdens scrollen |
 
-De menu-balk en het 3D-logo zet het script zelf op elke pagina. Het menu staat altijd in beeld, boven het projectvel; op een pagina zonder `data-logo3d` zit het logo meteen in het menu-vak. Openen geeft `<html>` de class `menu-open`.
+De menu-balk en het 3D-logo zet het script zelf op elke pagina. Home: het menu verschijnt als het logo erin vliegt. Projectpagina (geen `data-logo3d`): menu en logo staan er meteen, zonder animatie, boven het vel. Openen geeft `<html>` de class `menu-open`.
 
 ## Testen
 

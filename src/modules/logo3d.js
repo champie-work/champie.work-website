@@ -143,6 +143,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
   // In het menu: voorbij de trigger, op een pagina zonder header-vak, of als een projectvel open is
   const inMenu = () => !anchor || !trigger || document.documentElement.classList.contains('project-open') || window.scrollY >= morphStart;
   let morph = inMenu() ? 1 : 0; // 0 = groot, 1 = in het menu
+  if (!anchor) menu.el.classList.add('is-on', 'is-static'); // projectpagina: menu meteen vast in beeld
 
   onFrame((now, dt) => {
     const vw = viewW(), vh = viewH();
@@ -150,6 +151,7 @@ export function initLogo3d({ anchor, trigger, menu }) {
 
     // Overgang groot -> menu: speelt in één keer af
     const target = inMenu() ? 1 : 0;
+    menu.setVisible(target === 1);
     morph = reduceMotion ? target : target > morph ? Math.min(1, morph + dt / C.morphTime) : Math.max(0, morph - dt / C.morphTime);
     const p = easeInOutQuart(morph);
     const py = easeInOutCubic(morph); // y iets eerder dan x = zachte boog
