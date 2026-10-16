@@ -26,3 +26,5 @@ Code for the animations and interaction on champie.work. The site itself is buil
 
 ## Agents
 Pick the cheapest agent that fits (`.claude/agents/`): `zoeker` (haiku, low) for lookups, `bouwer` (sonnet, medium) for small changes and publishing, `denker` (opus, high) for 3D logo, scroll, parallax, new animations and hard bugs. If Opus is not available on the plan, set `denker` to `model: sonnet`.
+
+Mijn vaste wens: kies bij elke taak zelf de goedkoopste agent die past, zonder dat ik het vraag. Korte vragen beantwoord je zelf.
