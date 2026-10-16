@@ -24,7 +24,7 @@ const C = {
   eyeSpeed:    8,         // veersnelheid van het schuivende oog
   pupilSpeed:  16,        // veersnelheid pupil (sneller dan het oog: hij kijkt eerst)
   pupilRange:  22,        // uitslag pupil binnen het oog
-  saccade:     6,         // kleine oogsprongetjes als de muis stilstaat (0 = uit)
+  saccade:     10,        // kleine pupilsprongetjes als de muis stilstaat of het hoofd draait (0 = uit)
   spin:        true,      // in rust draait het hoofd rond
   spinSlow:    0.5,       // draaisnelheid als het oog naar je kijkt (rad/s)
   spinFast:    8,         // draaisnelheid achterlangs (rad/s)
@@ -193,13 +193,13 @@ export function initLogo3d({ anchor, trigger, menu }) {
     // Oog: schuift over het gezicht als de muis beweegt; tijdens draaien de logo-stand
     const tracking = pointer.active && !spinning;
     const eyeTarget = !tracking ? EYE.left : tx < 0 ? lerp(EYE.center, EYE.left, -tx) : lerp(EYE.center, EYE.right, tx);
-    const idle = stillFor > 1200;
+    const idle = stillFor > 1200 || !tracking; // muis stil of hoofd draait: pupil kijkt zelf rond
     nextSaccade -= dt;
     if (nextSaccade <= 0) {
-      saccade = idle && tracking && !reduceMotion ? (Math.random() * 2 - 1) * C.saccade : 0;
+      saccade = idle && !reduceMotion ? (Math.random() * 2 - 1) * C.saccade : 0;
       nextSaccade = 0.9 + Math.random() * 2.2;
     }
-    if (!idle || !tracking) saccade = 0;
+    if (!idle) saccade = 0;
     const pupTarget = clamp((!tracking ? PUP.rest : PUP.center + tx * C.pupilRange) + saccade, PUP.min, PUP.max);
     if (reduceMotion) { eyeS.x = eyeTarget; pupS.x = pupTarget; }
     else { spring(eyeS, eyeTarget, C.eyeSpeed, dt); spring(pupS, pupTarget, C.pupilSpeed, dt); }
