@@ -1,6 +1,6 @@
 // Diensten-blok als draaiwiel (zoals de iOS-kiezer): de rij staat vast in beeld, scrollen draait het wiel rond.
-// De categorieën zitten op een echte 3D-cilinder: de actieve staat bovenaan recht naar je toe,
-// de volgende kantelen weg naar achteren en worden kleiner. Bovenuit = weg, onderaan komt hij terug (eindeloos).
+// De categorieën zitten op een cilinder: de actieve staat bovenaan recht naar je toe,
+// de volgende kantelen in 3D weg (perspectief), worden kleiner en donkerder. Bovenuit = weg, onderaan komt hij terug (eindeloos).
 // Stopt het scrollen, dan klikt het wiel op de dichtstbijzijnde categorie.
 //  [data-services]        de rij (wordt vastgezet)
 //  [data-service-wheel]   het vak waarin de categorieën draaien (bovenrand = lijn waar rijen achter wegdraaien)
@@ -16,7 +16,8 @@ import { clamp, spring, wheelScale, wheelWrap } from '../lib/math.js';
 // radius: straal van de cilinder in px (bepaalt de afstanden; Figma: 149, 112, 80)
 // angle:  graden per categorie op de cilinder (bepaalt samen met radius de afstanden)
 // tilt:   hoeveel van die hoek de rij echt kantelt (1 = volle cilinder, lager = beter leesbaar)
-const CONFIG = { step: 150, turns: 2, speed: 16, idle: 110, scales: [1, 0.625, 0.5, 0.3125], radius: 340, angle: 26, tilt: 0.5 };
+// dim:    hoeveel elke rij verder weg donkerder wordt
+const CONFIG = { step: 150, turns: 2, speed: 16, idle: 110, scales: [1, 0.625, 0.5, 0.3125], radius: 340, angle: 26, tilt: 0.6, dim: 0.12 };
 
 export function initServices() {
   const row = document.querySelector('[data-services]');
@@ -69,10 +70,9 @@ export function initServices() {
       const w = wheelWrap(i, s.x, n);
       const t = Math.min(w, n - 1) * CONFIG.angle * rad; // hoek op de cilinder
       const y = CONFIG.radius * Math.sin(t);
-      const z = CONFIG.radius * (Math.cos(t) - 1);
-      c.el.style.transform = `translate3d(0, ${y}px, ${z}px) rotateX(${(-t / rad) * CONFIG.tilt}deg)`;
+      c.el.style.transform = `translate3d(0, ${y}px, 0) rotateX(${(-t / rad) * CONFIG.tilt}deg)`;
       // Bovenuit vervagen, onderaan weer invervagen
-      c.el.style.opacity = clamp(Math.min(1 + w * 2, (n - 0.5 - w) * 2), 0, 1);
+      c.el.style.opacity = clamp(Math.min(1 + w * 2, (n - 0.5 - w) * 2), 0, 1) * (1 - Math.max(w, 0) * CONFIG.dim);
       const sc = wheelScale(w, CONFIG.scales);
       for (const p of c.parts) p.style.scale = sc;
     });
