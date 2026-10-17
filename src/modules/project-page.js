@@ -1,4 +1,5 @@
-// Projectpagina: een echte pagina (/ralph-lauren) die als vel over de wazige homepage schuift.
+// Projectpagina: een echte pagina (/ralph-lauren) als modal over de wazige homepage.
+// Het vak blijft staan (homepage blijft bovenin zichtbaar); alleen de inhoud scrollt erin.
 //  [data-project-page="naam"]  wrapper om de hele projectpagina (direct in body)
 //  [data-project-close]        sluit-link (href="/")
 //  [data-grow]                 beeld dat klein begint en groot wordt tijdens het scrollen
@@ -15,7 +16,7 @@ import { addParallaxImgs } from './parallax.js';
 // grow: beginmaat van [data-grow] (Figma 497/1392)
 const CONFIG = { top: 0.27, grow: 0.36 };
 
-let view = null; // { wrap, sheet, grows, lenis, pushed }
+let view = null; // { wrap, box, sheet, grows, lenis, pushed }
 const cache = new Map();
 
 const load = (url) => {
@@ -26,12 +27,13 @@ const load = (url) => {
 function open(sheet, { animate, pushed }) {
   document.documentElement.style.setProperty('--pp-top', CONFIG.top * 100 + 'vh');
   const wrap = document.createElement('div'); wrap.className = 'cpp';
-  wrap.append(sheet); document.body.appendChild(wrap);
+  const box = document.createElement('div'); box.className = 'cpp_box'; // vast vak, scrollt van binnen
+  box.append(sheet); wrap.append(box); document.body.appendChild(wrap);
   document.documentElement.classList.add('project-open');
   pageLenis?.stop();
-  const lenis = reduceMotion ? null : new Lenis({ wrapper: wrap, content: sheet, duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  const lenis = reduceMotion ? null : new Lenis({ wrapper: box, content: sheet, duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
   addParallaxImgs(sheet.querySelectorAll('[data-parallax-img]'));
-  view = { wrap, sheet, grows: [...sheet.querySelectorAll('[data-grow]')], lenis, pushed };
+  view = { wrap, box, sheet, grows: [...sheet.querySelectorAll('[data-grow]')], lenis, pushed };
   wrap.addEventListener('click', (e) => { if (e.target === wrap) close(); });
   sheet.querySelectorAll('[data-project-close]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); close(); }));
   if (animate && !reduceMotion) wrap.getBoundingClientRect(); // eerst de beginstand tekenen, dan pas animeren
@@ -90,12 +92,12 @@ export function initProjectPage() {
 
   onFrame((now) => {
     if (!view) return;
-    const { wrap, grows } = view;
+    const { box, grows } = view;
     view.lenis?.raf(now);
-    // Groeibeeld: klein als het onderaan binnenkomt, volle maat als de bovenkant bij 10% van het scherm is
-    const vh = wrap.clientHeight;
+    // Groeibeeld: klein als het onderaan het vak binnenkomt, volle maat als de bovenkant bij 10% van het vak is
+    const bh = box.clientHeight, bt = box.getBoundingClientRect().top;
     for (const g of grows) {
-      const t = reduceMotion ? 1 : clamp((vh - g.getBoundingClientRect().top) / (vh * 0.9), 0, 1);
+      const t = reduceMotion ? 1 : clamp((bh - (g.getBoundingClientRect().top - bt)) / (bh * 0.9), 0, 1);
       g.style.transform = `scale(${CONFIG.grow + (1 - CONFIG.grow) * easeInOutCubic(t)})`;
     }
   });

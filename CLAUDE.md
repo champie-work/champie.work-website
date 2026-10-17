@@ -40,5 +40,5 @@ Project pages are real Webflow pages in the page folder `project` (folder id `6a
 3. Images: render the Figma node with `get_screenshot`, save the file to `assets/` in this repo, push, then `asset_tool > upload_image_by_url` with the jsDelivr URL of that commit (the proxy blocks direct uploads; asset_tool needs the Webflow Designer tab open — ask the owner). Set the img with key `assetId`.
 4. Home: the project card needs a link to the page (`link` setting, mode `page`, to = page id). Ralph Lauren card link: `60961c34-91ab-30f9-6881-4280739450d5`. Add `data-hover-title` on its `[data-project-title]`.
 5. Both embeds (home + every project page) must carry the same commit hash. Publish, then click the card on the test URL and check console.
-- Never give a Webflow class the names `cpp`, `cpp_home` (used by the script).
+- Never give a Webflow class the names `cpp`, `cpp_box`, `cpp_home` (used by the script).
 - Figma: never call get_metadata on page `0:1` (1.3M chars). Project frames: `374:2094` PROJECTS 1, `381:2261` PROJECTS 2.
