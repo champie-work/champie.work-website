@@ -12,9 +12,9 @@ import { clamp, easeInOutCubic } from '../lib/math.js';
 import { lenis as pageLenis } from './smooth-scroll.js';
 import { addParallaxImgs } from './parallax.js';
 
-// top:  hoeveel van de homepage boven het vel zichtbaar is (deel van de schermhoogte; Figma 224/841)
+// top:  hoeveel van de homepage boven het vel zichtbaar is (deel van de schermhoogte; Figma 134/841)
 // grow: beginmaat van [data-grow] (Figma 497/1392)
-const CONFIG = { top: 0.27, grow: 0.36 };
+const CONFIG = { top: 0.16, grow: 0.36 };
 
 let view = null; // { wrap, box, sheet, grows, lenis, pushed }
 const cache = new Map();
