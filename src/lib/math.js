@@ -22,3 +22,19 @@ export function nextFront(angle) {
   const rest = angle % TAU; // kan net onder 0 zijn na de veer; dan ook terug naar 0
   return angle - rest + (rest < 0.5 ? 0 : TAU);
 }
+
+// Draaiwiel: maat van een rij op afstand d van de actieve rij (0 = actief), lineair tussen de stappen
+export function wheelScale(d, steps) {
+  const a = Math.abs(d), last = steps.length - 1, i = Math.floor(a);
+  return i >= last ? steps[last] : lerp(steps[i], steps[i + 1], a - i);
+}
+
+// Draaiwiel: y van elke rij als ze onder elkaar staan (hoogtes al geschaald, vaste tussenruimte);
+// de rij op positie p (mag een breuk zijn) staat op 0
+export function wheelOffsets(sizes, gap, p) {
+  const tops = [0];
+  for (let i = 1; i < sizes.length; i++) tops[i] = tops[i - 1] + sizes[i - 1] + gap;
+  const i = clamp(Math.floor(p), 0, sizes.length - 1);
+  const at = i + 1 < sizes.length ? lerp(tops[i], tops[i + 1], p - i) : tops[i];
+  return tops.map((t) => t - at);
+}

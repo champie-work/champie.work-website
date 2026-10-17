@@ -43,15 +43,13 @@ html.lenis, html.lenis body { height: auto; }
 .project_follow img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (hover: none) { .project_follow { display: none; } }
 
-/* ===== Diensten: rij staat vast (top via services.js), één vierkantje tegelijk, rollende teller ===== */
+/* ===== Diensten: rij staat vast (top via services.js), categorieën draaien als een wiel ===== */
 [data-services] { position: sticky; }
+[data-service-wheel] { perspective: 900px; }
+[data-service-wheel] [data-service] { position: absolute; top: 0; left: 0; right: 0; transform-origin: 0 50%; will-change: transform, opacity; }
+[data-service] > :not([data-service-mark]) { transform-origin: 0 0; }
 [data-service-mark] { opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .4s cubic-bezier(.22,1,.36,1); }
 [data-service].is-active [data-service-mark] { opacity: 1; transform: none; }
-[data-service-item] { color: #4a4a4a; transition: color .35s ease; }
-[data-service-item].is-current { color: #fff; }
-[data-service-count] { display: inline-flex; font-variant-numeric: tabular-nums; }
-.odo { display: inline-grid; overflow: hidden; }
-.odo > span { grid-area: 1 / 1; }
 @media (prefers-reduced-motion: reduce) { [data-service-mark] { transition: none; } }
 
 /* ===== Projectpagina: vel over de wazige homepage (project-page.js) ===== */

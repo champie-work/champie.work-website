@@ -1,101 +1,71 @@
-// Diensten-blok: de rij staat vast in beeld, elke dienst krijgt een eigen stukje scroll.
-// De lijst schuift per dienst één regel op (veer), naam + vierkantje rijden mee binnen hun categorie.
-//  [data-services]        de rij met de drie delen (wordt vastgezet)
-//  [data-service]         een categorie;  [data-service-mark] het vierkantje, [data-service-name] de naam
-//  [data-service-item]    een dienst-regel (grijs, de actieve wit);  [data-service-count] het nummer (rolt als een kilometerteller)
+// Diensten-blok als draaiwiel (zoals de iOS-kiezer): de rij staat vast in beeld, scrollen draait het wiel.
+// De actieve categorie staat bovenaan op volle maat; de volgende worden kleiner en kantelen weg,
+// voorbije draaien naar boven en vervagen. Stopt het scrollen, dan zakt het wiel op de dichtstbijzijnde categorie.
+//  [data-services]        de rij (wordt vastgezet)
+//  [data-service-wheel]   het vak waarin de categorieën draaien
+//  [data-service]         een categorie;  [data-service-mark] het vierkantje (alleen bij de actieve)
 import { onFrame, reduceMotion } from '../lib/core.js';
-import { clamp, spring } from '../lib/math.js';
+import { clamp, spring, wheelScale, wheelOffsets } from '../lib/math.js';
 
-// line:  leeslijn, als deel van de schermhoogte (0 = bovenkant)
-// step:  scroll-afstand per dienst in px (hoger = rustiger)
-// speed: veer van de lijst (hoger = sneller naar de volgende regel)
-// roll:  duur van het rollen van een cijfer in ms
-const CONFIG = { line: 0.3, step: 60, speed: 18, roll: 500 };
-
-// Kilometerteller: het oude cijfer schuift weg, het nieuwe komt erachteraan (omhoog bij optellen, omlaag bij aftellen)
-function roll(col, ch, up) {
-  const old = col.lastElementChild;
-  if (old && old.textContent === ch) return;
-  const next = col.appendChild(document.createElement('span'));
-  next.textContent = ch;
-  if (!old) return;
-  const d = up ? 100 : -100;
-  const o = { duration: reduceMotion ? 0 : CONFIG.roll, easing: 'cubic-bezier(.22,1,.36,1)' };
-  next.animate([{ transform: `translateY(${d}%)` }, { transform: 'none' }], o);
-  old.animate([{ transform: 'none' }, { transform: `translateY(${-d}%)` }], o).finished.then(() => old.remove(), () => old.remove());
-}
+// step:   scroll-afstand per categorie in px (hoger = rustiger)
+// speed:  veer van het wiel (hoger = sneller, lager = zwaarder wiel)
+// idle:   ms zonder scrollen voordat het wiel op een categorie vastklikt
+// scales: maat van de actieve rij, de volgende, de daarna... (Figma: 32, 20, 16, 10 px)
+// gap:    ruimte tussen de rijen in px
+// tilt:   kanteling per rij in graden (het 3D-wiel-gevoel)
+// fade:   hoe snel voorbije rijen vervagen (1 = weg na één rij)
+const CONFIG = { step: 320, speed: 9, idle: 140, scales: [1, 0.625, 0.5, 0.3125], gap: 50, tilt: 14, fade: 1.4 };
 
 export function initServices() {
   const row = document.querySelector('[data-services]');
-  const items = row ? [...row.querySelectorAll('[data-service-item]')] : [];
-  if (!items.length) return;
-  const count = row.querySelector('[data-service-count]');
-  const cats = [...row.querySelectorAll('[data-service]')].map((el) => ({
-    el, name: el.querySelector('[data-service-name]'), mark: el.querySelector('[data-service-mark]'), top: 0, max: 0,
+  const wheel = row?.querySelector('[data-service-wheel]');
+  if (!wheel) return;
+  const cats = [...wheel.querySelectorAll('[data-service]')].map((el) => ({
+    el, parts: [...el.children].filter((c) => !c.hasAttribute('data-service-mark')), h: 0,
   }));
-  const list = cats[0].el.parentElement;
+  if (!cats.length) return;
+  const n = cats.length;
 
   // Lege ruimte na de rij = de scroll-afstand waarin de rij vaststaat
   const spacer = document.createElement('div');
   row.after(spacer);
 
-  let tops = [], pinTop = 0, last = NaN;
+  let pinTop = 0, last = NaN;
   const measure = () => {
-    list.style.translate = '';
-    cats.forEach((c) => { c.name.style.translate = c.mark.style.translate = ''; });
-    row.style.height = '';
-    const L = list.getBoundingClientRect().top;
-    tops = items.map((el) => el.getBoundingClientRect().top - L);
-    cats.forEach((c) => {
-      const r = c.name.getBoundingClientRect();
-      c.top = r.top - L;
-      c.max = c.el.getBoundingClientRect().bottom - r.bottom;
-    });
-    // Vastzetten zo dat de eerste dienst op de leeslijn staat; de rij eindigt precies onderaan de pagina
-    const H = window.innerHeight;
-    pinTop = H * CONFIG.line - (items[0].getBoundingClientRect().top - row.getBoundingClientRect().top);
-    const below = parseFloat(getComputedStyle(row.parentElement).paddingBottom) || 0;
+    cats.forEach((c) => { c.h = c.el.offsetHeight; }); // transform telt niet mee, dus dit is de volle maat
+    pinTop = Math.max(24, (window.innerHeight - row.offsetHeight) / 2);
     row.style.top = `${pinTop}px`;
-    row.style.height = `${H - pinTop - below}px`;
-    spacer.style.height = `${(items.length - 1) * CONFIG.step}px`;
+    spacer.style.height = `${(n - 1) * CONFIG.step}px`;
     last = NaN;
   };
   measure();
   window.addEventListener('resize', measure);
+  document.fonts?.ready.then(measure);
 
-  // Teller: één kolom per cijfer, voorloopnul blijft leeg
-  const digits = String(items.length).length;
-  const cols = [];
-  if (count) {
-    count.textContent = '';
-    for (let i = 0; i < digits; i++) cols.push(count.appendChild(Object.assign(document.createElement('span'), { className: 'odo' })));
-  }
-
-  let active = -1;
-  const show = (i) => {
-    const s = String(i + 1).padStart(digits, ' ');
-    cols.forEach((c, k) => roll(c, s[k].trim(), i > active));
-    items[active]?.classList.remove('is-current');
-    items[i].classList.add('is-current');
-    active = i;
-    const cat = items[i].closest('[data-service]');
-    cats.forEach((c) => c.el.classList.toggle('is-active', c.el === cat));
-  };
-
+  let active = -1, raw = 0, moved = 0;
   const s = { x: 0, v: 0 };
   onFrame((now, dt) => {
-    // Hoe ver de rij al vaststaat, in diensten (de spacer schuift onder de vaste rij door)
+    // Hoe ver de rij al vaststaat, in categorieën (de spacer schuift onder de vaste rij door)
     const natural = spacer.getBoundingClientRect().top - row.offsetHeight;
-    const i = clamp(Math.round((pinTop - natural) / CONFIG.step), 0, items.length - 1);
-    if (i !== active) show(i);
+    const r = clamp((pinTop - natural) / CONFIG.step, 0, n - 1);
+    if (r !== raw) { raw = r; moved = now; }
+    const target = reduceMotion || now - moved > CONFIG.idle ? Math.round(raw) : raw;
 
-    const target = tops[i] - tops[0];
     if (reduceMotion) s.x = target; else spring(s, target, CONFIG.speed, dt);
-    if (Math.abs(target - s.x) < 0.1 && Math.abs(s.v) < 0.1) { s.x = target; s.v = 0; }
+    if (Math.abs(target - s.x) < 0.001 && Math.abs(s.v) < 0.001) { s.x = target; s.v = 0; }
+
+    const a = Math.round(s.x);
+    if (a !== active) { cats.forEach((c, i) => c.el.classList.toggle('is-active', i === a)); active = a; }
     if (s.x === last) return;
     last = s.x;
 
-    list.style.translate = `0 ${-s.x}px`;
-    for (const c of cats) c.name.style.translate = c.mark.style.translate = `0 ${clamp(tops[0] + s.x - c.top, 0, c.max)}px`;
+    const scales = cats.map((c, i) => wheelScale(i - s.x, CONFIG.scales));
+    const ys = wheelOffsets(cats.map((c, i) => c.h * scales[i]), CONFIG.gap, s.x);
+    cats.forEach((c, i) => {
+      const d = i - s.x;
+      c.el.style.transform = `translate3d(0, ${ys[i]}px, 0) rotateX(${-d * CONFIG.tilt}deg)`;
+      c.el.style.opacity = d < 0 ? clamp(1 + d * CONFIG.fade, 0, 1) : 1;
+      for (const p of c.parts) p.style.scale = scales[i];
+    });
   });
 }

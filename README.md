@@ -29,12 +29,10 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-arrow` | de ↳-pijl | pijl in de hovertitel |
 | `data-project-media` | fotokader van de kaart | kleine zwevende kopie van de foto volgt de cursor |
 | `data-eye` | een oog-SVG in tekst | pupil kijkt horizontaal mee binnen het wit |
-| `data-services` | de rij van het dienstenblok | staat vast in beeld; elke dienst krijgt `CONFIG.step` px scroll (`services.js`) |
-| `data-service` | een categorie | krijgt `is-active` als een dienst erin op de leeslijn staat |
-| `data-service-mark` | het witte vierkantje in een categorie | rijdt mee met de naam; groeit in bij de actieve categorie |
-| `data-service-name` | de naam van een categorie | rijdt mee op de leeslijn binnen de eigen categorie |
-| `data-service-item` | één dienst-regel | telt mee voor het nummer |
-| `data-service-count` | het nummer rechts | nummer van de actieve dienst, rolt als kilometerteller (`CONFIG.roll`) |
+| `data-services` | de rij van het dienstenblok | staat vast in beeld; elke categorie krijgt `CONFIG.step` px scroll (`services.js`) |
+| `data-service-wheel` | het vak met de categorieën | categorieën draaien als een iOS-wiel; actieve bovenaan op volle maat |
+| `data-service` | een categorie | krijgt `is-active` als ze bovenaan het wiel staat |
+| `data-service-mark` | het witte vierkantje in een categorie | groeit in bij de actieve categorie |
 | `data-project-page="naam"` | wrapper om een hele projectpagina | modal over de wazige homepage: vak blijft staan, inhoud scrollt erin (`project-page.js`) |
 | `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
 | `data-grow` | beeld in een projectpagina | begint klein (`CONFIG.grow`) en wordt volle maat tijdens scrollen |
@@ -63,6 +61,6 @@ src/
     logo3d.js             3D-logo (Three.js), instellingen bovenin
     project-hover.js      titel-roll en zwevende foto
     eye.js                meekijkend oog in tekst
-    services.js           dienstenblok: sticky, vierkantje, teller
+    services.js           dienstenblok: sticky draaiwiel
     project-page.js       projectpagina als vel over de wazige homepage
 ```
