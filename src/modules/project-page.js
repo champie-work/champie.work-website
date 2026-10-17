@@ -12,8 +12,8 @@ import { lenis as pageLenis } from './smooth-scroll.js';
 import { addParallaxImgs } from './parallax.js';
 
 // top:  hoeveel van de homepage boven het vel zichtbaar is (deel van de schermhoogte; Figma 224/841)
-// grow: beginmaat van [data-grow] (Figma 448/1474)
-const CONFIG = { top: 0.27, grow: 0.3 };
+// grow: beginmaat van [data-grow] (Figma 497/1392)
+const CONFIG = { top: 0.27, grow: 0.36 };
 
 let view = null; // { wrap, sheet, line, grows, lenis, pushed }
 const cache = new Map();
