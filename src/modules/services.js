@@ -14,8 +14,9 @@ import { clamp, spring, wheelScale, wheelWrap } from '../lib/math.js';
 // idle:   ms zonder scrollen voordat het wiel op een categorie vastklikt
 // scales: maat van de actieve rij, de volgende, de daarna... (Figma: 32, 20, 16, 10 px)
 // radius: straal van de cilinder in px (bepaalt de afstanden; Figma: 149, 112, 80)
-// angle:  graden per categorie op de cilinder (hoger = sterker 3D)
-const CONFIG = { step: 150, turns: 2, speed: 16, idle: 110, scales: [1, 0.625, 0.5, 0.3125], radius: 340, angle: 26 };
+// angle:  graden per categorie op de cilinder (bepaalt samen met radius de afstanden)
+// tilt:   hoeveel van die hoek de rij echt kantelt (1 = volle cilinder, lager = beter leesbaar)
+const CONFIG = { step: 150, turns: 2, speed: 16, idle: 110, scales: [1, 0.625, 0.5, 0.3125], radius: 340, angle: 26, tilt: 0.5 };
 
 export function initServices() {
   const row = document.querySelector('[data-services]');
@@ -69,7 +70,7 @@ export function initServices() {
       const t = Math.min(w, n - 1) * CONFIG.angle * rad; // hoek op de cilinder
       const y = CONFIG.radius * Math.sin(t);
       const z = CONFIG.radius * (Math.cos(t) - 1);
-      c.el.style.transform = `translate3d(0, ${y}px, ${z}px) rotateX(${-t / rad}deg)`;
+      c.el.style.transform = `translate3d(0, ${y}px, ${z}px) rotateX(${(-t / rad) * CONFIG.tilt}deg)`;
       // Bovenuit vervagen, onderaan weer invervagen
       c.el.style.opacity = clamp(Math.min(1 + w * 2, (n - 0.5 - w) * 2), 0, 1);
       const sc = wheelScale(w, CONFIG.scales);
