@@ -15,7 +15,7 @@ import { addParallaxImgs } from './parallax.js';
 // grow: beginmaat van [data-grow] (Figma 497/1392)
 const CONFIG = { top: 0.27, grow: 0.36 };
 
-let view = null; // { wrap, sheet, line, grows, lenis, pushed }
+let view = null; // { wrap, sheet, grows, lenis, pushed }
 const cache = new Map();
 
 const load = (url) => {
@@ -26,13 +26,12 @@ const load = (url) => {
 function open(sheet, { animate, pushed }) {
   document.documentElement.style.setProperty('--pp-top', CONFIG.top * 100 + 'vh');
   const wrap = document.createElement('div'); wrap.className = 'cpp';
-  const line = document.createElement('div'); line.className = 'cpp_line';
-  wrap.append(sheet, line); document.body.appendChild(wrap);
+  wrap.append(sheet); document.body.appendChild(wrap);
   document.documentElement.classList.add('project-open');
   pageLenis?.stop();
   const lenis = reduceMotion ? null : new Lenis({ wrapper: wrap, content: sheet, duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
   addParallaxImgs(sheet.querySelectorAll('[data-parallax-img]'));
-  view = { wrap, sheet, line, grows: [...sheet.querySelectorAll('[data-grow]')], lenis, pushed };
+  view = { wrap, sheet, grows: [...sheet.querySelectorAll('[data-grow]')], lenis, pushed };
   wrap.addEventListener('click', (e) => { if (e.target === wrap) close(); });
   sheet.querySelectorAll('[data-project-close]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); close(); }));
   if (animate && !reduceMotion) wrap.getBoundingClientRect(); // eerst de beginstand tekenen, dan pas animeren
@@ -91,10 +90,8 @@ export function initProjectPage() {
 
   onFrame((now) => {
     if (!view) return;
-    const { wrap, sheet, line, grows } = view;
+    const { wrap, grows } = view;
     view.lenis?.raf(now);
-    // Lijn rechts: vaste lijn langs het vel (begint bij de bovenrand van het vel)
-    line.style.top = Math.max(20, sheet.getBoundingClientRect().top + 20) + 'px';
     // Groeibeeld: klein als het onderaan binnenkomt, volle maat als de bovenkant bij 10% van het scherm is
     const vh = wrap.clientHeight;
     for (const g of grows) {
