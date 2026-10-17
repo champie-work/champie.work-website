@@ -29,12 +29,6 @@ export function wheelScale(d, steps) {
   return i >= last ? steps[last] : lerp(steps[i], steps[i + 1], a - i);
 }
 
-// Draaiwiel: y van elke rij als ze onder elkaar staan (hoogtes al geschaald, vaste tussenruimte);
-// de rij op positie p (mag een breuk zijn) staat op 0
-export function wheelOffsets(sizes, gap, p) {
-  const tops = [0];
-  for (let i = 1; i < sizes.length; i++) tops[i] = tops[i - 1] + sizes[i - 1] + gap;
-  const i = clamp(Math.floor(p), 0, sizes.length - 1);
-  const at = i + 1 < sizes.length ? lerp(tops[i], tops[i + 1], p - i) : tops[i];
-  return tops.map((t) => t - at);
-}
+// Draaiwiel dat rondgaat: afstand van rij i tot positie p, ingepakt in [-0.5, n - 0.5)
+// (net voorbij de top = weg naar boven, daarna komt de rij onderaan terug)
+export const wheelWrap = (i, p, n) => ((((i - p + 0.5) % n) + n) % n) - 0.5;
