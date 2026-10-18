@@ -17,7 +17,7 @@ import { clamp, spring, wheelScale, wheelWrap } from '../lib/math.js';
 // angle:  graden per categorie op de cilinder (bepaalt samen met radius de afstanden)
 // tilt:   hoeveel van die hoek de rij echt kantelt (1 = volle cilinder, lager = beter leesbaar)
 // dim:    hoeveel elke rij verder weg donkerder wordt
-const CONFIG = { step: 150, turns: 2, speed: 16, idle: 110, scales: [1, 0.625, 0.5, 0.3125], radius: 340, angle: 26, tilt: 0.6, dim: 0.12 };
+const CONFIG = { step: 150, turns: 2, speed: 16, idle: 110, scales: [1, 0.625, 0.5, 0.3125], radius: 340, angle: 26, tilt: 0.45, dim: 0.12 };
 
 export function initServices() {
   const row = document.querySelector('[data-services]');
