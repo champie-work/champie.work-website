@@ -30,8 +30,8 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-project-media` | fotokader van de kaart | kleine zwevende kopie van de foto volgt de cursor |
 | `data-eye` | een oog-SVG in tekst | pupil kijkt horizontaal mee binnen het wit |
 | `data-services` | de rij van het dienstenblok | staat vast in beeld; elke categorie krijgt `CONFIG.step` px scroll (`services.js`) |
-| `data-service-wheel` | het vak met de categorieën | categorieën draaien eindeloos rond op een 3D-wiel (iOS-kiezer); actieve bovenaan |
-| `data-service` | een categorie | krijgt `is-active` als ze bovenaan het wiel staat |
+| `data-service-wheel` | het vak met de categorieën | lijst blijft op volgorde; de actieve categorie wordt groot, de rest klein (maatgolf) |
+| `data-service` | een categorie | krijgt `is-active` als ze aan de beurt is |
 | `data-service-mark` | het witte vierkantje in een categorie | groeit in bij de actieve categorie |
 | `data-project-page="naam"` | wrapper om een hele projectpagina | modal over de wazige homepage: vak blijft staan, inhoud scrollt erin (`project-page.js`) |
 | `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
@@ -61,6 +61,6 @@ src/
     logo3d.js             3D-logo (Three.js), instellingen bovenin
     project-hover.js      titel-roll en zwevende foto
     eye.js                meekijkend oog in tekst
-    services.js           dienstenblok: sticky draaiwiel
+    services.js           dienstenblok: sticky lijst met maatgolf
     project-page.js       projectpagina als vel over de wazige homepage
 ```

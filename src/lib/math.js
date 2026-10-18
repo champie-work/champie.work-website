@@ -23,12 +23,9 @@ export function nextFront(angle) {
   return angle - rest + (rest < 0.5 ? 0 : TAU);
 }
 
-// Draaiwiel: maat van een rij op afstand d van de actieve rij (0 = actief), lineair tussen de stappen
+// Maatgolf: maat van een rij op afstand d van de actieve rij (0 = actief), lineair tussen de stappen
 export function wheelScale(d, steps) {
   const a = Math.abs(d), last = steps.length - 1, i = Math.floor(a);
   return i >= last ? steps[last] : lerp(steps[i], steps[i + 1], a - i);
 }
 
-// Draaiwiel dat rondgaat: afstand van rij i tot positie p, ingepakt in [-0.5, n - 0.5)
-// (net voorbij de top = weg naar boven, daarna komt de rij onderaan terug)
-export const wheelWrap = (i, p, n) => ((((i - p + 0.5) % n) + n) % n) - 0.5;

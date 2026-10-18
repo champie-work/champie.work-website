@@ -24,9 +24,9 @@ test('volgen is gelijk op 60 en 120 Hz', () => {
   assert.ok(Math.abs(a - b) < 1e-9);
 });
 
-import { wheelScale, wheelWrap } from '../src/lib/math.js';
+import { wheelScale } from '../src/lib/math.js';
 
-test('wiel: maat per afstand, ook tussen de stappen en voorbij het eind', () => {
+test('maatgolf: maat per afstand, ook tussen de stappen en voorbij het eind', () => {
   const s = [1, 0.625, 0.5, 0.3125];
   assert.equal(wheelScale(0, s), 1);
   assert.equal(wheelScale(-1, s), 0.625);
@@ -34,10 +34,3 @@ test('wiel: maat per afstand, ook tussen de stappen en voorbij het eind', () => 
   assert.equal(wheelScale(7, s), 0.3125);
 });
 
-test('wiel gaat rond: rij die bovenuit gaat komt onderaan terug', () => {
-  assert.equal(wheelWrap(0, 0, 4), 0);
-  assert.equal(wheelWrap(3, 0, 4), 3);
-  assert.ok(Math.abs(wheelWrap(0, 0.4, 4) + 0.4) < 1e-9);  // gaat net naar boven weg
-  assert.ok(Math.abs(wheelWrap(0, 0.6, 4) - 3.4) < 1e-9);   // en staat nu onderaan
-  assert.equal(wheelWrap(1, 9, 4), 0);        // na twee rondes weer op dezelfde plek
-});
