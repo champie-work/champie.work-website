@@ -50,7 +50,7 @@ function open(sheet, { animate, pushed }) {
 function reveal(sheet, delay) {
   const top = sheet.getBoundingClientRect().top; // vel staat nog onder het scherm: meten vanaf de bovenkant van het vel
   const seen = (el) => el.getBoundingClientRect().top - top < innerHeight;
-  const blocks = [...sheet.children].filter(seen);
+  const blocks = [...sheet.children].filter((el) => seen(el) && !el.hasAttribute('data-grow')); // [data-grow] krijgt zijn maat per frame, niet overschrijven
   blocks.forEach((el, i) =>
     el.animate([{ opacity: 0, transform: 'translateY(30px)' }, { opacity: 1, transform: 'none' }],
       { duration: 1400, delay: delay + i * CONFIG.stagger, easing: EASE, fill: 'backwards' }));
