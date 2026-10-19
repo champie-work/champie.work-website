@@ -17,7 +17,7 @@ import { addParallaxImgs } from './parallax.js';
 // drop:  homepage zakt weg naar deze maat en helderheid als het vel opent
 // tilt:  beelden komen binnen met deze kanteling (graden) en liggen dan plat
 // delay: wanneer de inhoud begint te bewegen (ms na de klik)
-const CONFIG = { top: 0.16, grow: 0.36, drop: { scale: 0.94, opacity: 0.5 }, tilt: 35, delay: 450 };
+const CONFIG = { top: 0.16, grow: 0.36, drop: { scale: 0.94, opacity: 0.5 }, tilt: 35, delay: 600 };
 const EASE = 'cubic-bezier(.22,1,.36,1)';
 
 let view = null; // { wrap, box, sheet, grows, lenis, pushed }
@@ -102,9 +102,9 @@ export function initProjectPage() {
 
   if (own) {
     // Direct bezoek: home erachter zetten
-    open(own, { animate: false, pushed: false });
     const bg = document.createElement('div'); bg.className = 'cpp_home'; bg.inert = true;
     document.body.prepend(bg);
+    open(own, { animate: false, pushed: false });
     load('/').then((doc) => {
       doc.querySelectorAll('script, [data-project-page]').forEach((n) => n.remove());
       bg.append(...[...doc.body.children].map((n) => document.importNode(n, true)));

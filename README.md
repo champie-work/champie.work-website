@@ -33,7 +33,7 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-service-wheel` | het vak met de categorieën | lijst blijft op volgorde; de actieve categorie wordt groot, de rest klein (maatgolf) |
 | `data-service` | een categorie | krijgt `is-active` als ze aan de beurt is |
 | `data-service-mark` | het witte vierkantje in een categorie | groeit in bij de actieve categorie |
-| `data-project-page="naam"` | wrapper om een hele projectpagina | modal over de wazige homepage: vak blijft staan, inhoud scrollt erin (`project-page.js`) |
+| `data-project-page="naam"` | wrapper om een hele projectpagina | modal over de wazige homepage: vak blijft staan, inhoud scrollt erin. Overgang: homepage zakt weg, vel komt smal op en wordt breed, `h1` schuift uit een masker, beelden kantelen plat (`project-page.js`, CONFIG `drop`/`tilt`/`delay`) |
 | `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
 | `data-grow` | beeld in een projectpagina | begint klein (`CONFIG.grow`) en wordt volle maat tijdens scrollen |
 
