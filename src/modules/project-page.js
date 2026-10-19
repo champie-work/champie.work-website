@@ -14,10 +14,9 @@ import { addParallaxImgs } from './parallax.js';
 
 // top:   hoeveel van de homepage boven het vel zichtbaar is (deel van de schermhoogte; Figma 134/841)
 // grow:  beginmaat van [data-grow] (Figma 497/1392)
-// drop:  homepage zakt weg naar deze maat en helderheid als het vel opent
 // tilt:  beelden komen binnen met deze kanteling (graden) en liggen dan plat
 // delay: wanneer de inhoud begint te bewegen (ms na de klik)
-const CONFIG = { top: 0.16, grow: 0.36, drop: { scale: 0.94, opacity: 0.5 }, tilt: 35, delay: 600 };
+const CONFIG = { top: 0.16, grow: 0.36, tilt: 35, delay: 600 };
 const EASE = 'cubic-bezier(.22,1,.36,1)';
 
 let view = null; // { wrap, box, sheet, grows, lenis, pushed }
@@ -42,19 +41,7 @@ function open(sheet, { animate, pushed }) {
   sheet.querySelectorAll('[data-project-close]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); close(); }));
   if (animate && !reduceMotion) wrap.getBoundingClientRect(); // eerst de beginstand tekenen, dan pas animeren
   wrap.classList.add('is-in');
-  if (!reduceMotion) { view.drop = dropHome(animate); reveal(sheet, animate ? CONFIG.delay : 150); }
-}
-
-// Homepage zakt weg achter het vel (alles in body behalve vaste lagen zoals menu en logo)
-function dropHome(animate) {
-  const oy = scrollY + innerHeight / 2;
-  return [...document.body.children]
-    .filter((el) => el.classList.contains('cpp_home') || (!el.classList.contains('cpp') && getComputedStyle(el).position !== 'fixed'))
-    .map((el) => {
-      el.style.transformOrigin = el.classList.contains('cpp_home') ? '50% 50%' : `50% ${oy - el.offsetTop}px`;
-      return el.animate([{ transform: 'none', opacity: 1 }, { transform: `scale(${CONFIG.drop.scale})`, opacity: CONFIG.drop.opacity }],
-        { duration: animate ? 900 : 0, easing: 'cubic-bezier(.76,0,.24,1)', fill: 'forwards' });
-    });
+  if (!reduceMotion) reveal(sheet, animate ? CONFIG.delay : 150);
 }
 
 // Inhoud bouwt zich op: titel schuift omhoog uit een masker, tekst komt op, beelden kantelen plat
@@ -82,8 +69,7 @@ function close(fromHistory) {
   const v = view; view = null;
   v.wrap.classList.remove('is-in');
   document.documentElement.classList.remove('project-open');
-  v.drop?.forEach((a) => a.reverse());
-  const done = () => { v.drop?.forEach((a) => a.cancel()); v.lenis?.destroy(); v.wrap.remove(); pageLenis?.start(); };
+  const done = () => { v.lenis?.destroy(); v.wrap.remove(); pageLenis?.start(); };
   reduceMotion ? done() : setTimeout(done, 900);
 }
 
