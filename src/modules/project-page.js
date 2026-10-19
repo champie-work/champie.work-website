@@ -15,9 +15,10 @@ import { addParallaxImgs } from './parallax.js';
 // top:   hoeveel van de homepage boven het vel zichtbaar is (deel van de schermhoogte; Figma 134/841)
 // grow:  beginmaat van [data-grow] (Figma 497/1392)
 // tilt:  beelden komen binnen met deze kanteling (graden) en liggen dan plat
-// delay: wanneer de inhoud begint te bewegen (ms na de klik)
-const CONFIG = { top: 0.16, grow: 0.36, tilt: 35, delay: 600 };
-const EASE = 'cubic-bezier(.22,1,.36,1)';
+// delay: hoe lang het vel leeg blijft voor de inhoud verschijnt (ms na de klik; het vel zelf duurt 1100 ms)
+// stagger: tijd tussen de onderdelen die na elkaar verschijnen (ms)
+const CONFIG = { top: 0.16, grow: 0.36, tilt: 25, delay: 1150, stagger: 110 };
+const EASE = 'cubic-bezier(.16,1,.3,1)';
 
 let view = null; // { wrap, box, sheet, grows, lenis, pushed }
 const cache = new Map();
@@ -41,24 +42,24 @@ function open(sheet, { animate, pushed }) {
   sheet.querySelectorAll('[data-project-close]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); close(); }));
   if (animate && !reduceMotion) wrap.getBoundingClientRect(); // eerst de beginstand tekenen, dan pas animeren
   wrap.classList.add('is-in');
-  if (!reduceMotion) reveal(sheet, animate ? CONFIG.delay : 150);
+  if (!reduceMotion) reveal(sheet, animate ? CONFIG.delay : 350);
 }
 
-// Inhoud bouwt zich op: titel schuift omhoog uit een masker, tekst komt op, beelden kantelen plat
+// Inhoud bouwt zich op: vel blijft eerst leeg, dan komt alles rustig na elkaar binnen.
+// Titel schuift omhoog uit een masker, blokken komen op, beelden kantelen plat.
 function reveal(sheet, delay) {
-  const fold = innerHeight;
-  const seen = (el) => el.getBoundingClientRect().top < fold;
-  const title = sheet.querySelector('h1');
-  title?.animate([{ transform: 'translateY(60%)', clipPath: 'inset(0 0 100% 0)' }, { transform: 'none', clipPath: 'inset(0 0 0 0)' }],
-    { duration: 1000, delay, easing: EASE, fill: 'backwards' });
-  [...sheet.children].slice(0, 3).filter(seen).forEach((el, i) =>
-    el.animate([{ opacity: 0, transform: 'translateY(24px)' }, { opacity: 1, transform: 'none' }],
-      { duration: 800, delay: delay + 100 + i * 90, easing: EASE, fill: 'backwards' }));
+  const seen = (el) => el.getBoundingClientRect().top < innerHeight;
+  const blocks = [...sheet.children].filter(seen);
+  blocks.forEach((el, i) =>
+    el.animate([{ opacity: 0, transform: 'translateY(30px)' }, { opacity: 1, transform: 'none' }],
+      { duration: 1400, delay: delay + i * CONFIG.stagger, easing: EASE, fill: 'backwards' }));
+  sheet.querySelector('h1')?.animate([{ transform: 'translateY(70%)', clipPath: 'inset(0 0 100% 0)' }, { transform: 'none', clipPath: 'inset(0 0 0 0)' }],
+    { duration: 1400, delay: delay + CONFIG.stagger, easing: EASE, fill: 'backwards' });
   const imgs = [...sheet.querySelectorAll('[data-grow] img'), ...[...sheet.querySelectorAll('[data-parallax-img]')].map((i) => i.parentElement)];
   imgs.filter(seen).forEach((el, i) => {
     el.style.transformOrigin = '50% 100%';
-    el.animate([{ opacity: 0, transform: `perspective(1200px) rotateX(${CONFIG.tilt}deg) translateY(80px)` }, { opacity: 1, transform: 'none' }],
-      { duration: 1200, delay: delay + 250 + i * 120, easing: EASE, fill: 'backwards' });
+    el.animate([{ opacity: 0, transform: `perspective(1400px) rotateX(${CONFIG.tilt}deg) translateY(60px)` }, { opacity: 1, transform: 'none' }],
+      { duration: 1600, delay: delay + (blocks.length + i) * CONFIG.stagger, easing: EASE, fill: 'backwards' });
   });
 }
 
@@ -70,7 +71,7 @@ function close(fromHistory) {
   v.wrap.classList.remove('is-in');
   document.documentElement.classList.remove('project-open');
   const done = () => { v.lenis?.destroy(); v.wrap.remove(); pageLenis?.start(); };
-  reduceMotion ? done() : setTimeout(done, 900);
+  reduceMotion ? done() : setTimeout(done, 1100);
 }
 
 async function openUrl(url, push) {
