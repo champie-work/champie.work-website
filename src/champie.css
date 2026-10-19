@@ -53,9 +53,9 @@ html.lenis, html.lenis body { height: auto; }
 
 /* ===== Projectpagina: vel over de wazige homepage (project-page.js) ===== */
 .cpp { position: fixed; inset: 0; z-index: 60; background: rgba(14,14,16,0); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); transition: background .9s ease, backdrop-filter .9s ease, -webkit-backdrop-filter .9s ease; }
-.cpp_box { position: absolute; top: var(--pp-top, 16vh); left: 0; right: 0; bottom: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; transform: translateY(100vh); transition: transform .9s cubic-bezier(.76,0,.24,1); }
+.cpp_box { position: absolute; top: var(--pp-top, 16vh); left: 0; right: 0; bottom: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; transform: translateY(100vh); clip-path: inset(0 12% 0 12% round 18px 18px 0 0); border-top: 1px solid rgba(255,255,255,.16); transition: transform .9s cubic-bezier(.76,0,.24,1), clip-path .9s cubic-bezier(.76,0,.24,1); }
 .cpp_box::-webkit-scrollbar { display: none; }
-.cpp.is-in .cpp_box { transform: none; }
+.cpp.is-in .cpp_box { transform: none; clip-path: inset(0 0 0 0 round 18px 18px 0 0); }
 .cpp.is-in { background: rgba(14,14,16,.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .cpp [data-project-page] { min-height: 100%; }
 .cpp [data-grow] { transform-origin: 50% 0; } /* groeit vanaf het label naar beneden */
