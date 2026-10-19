@@ -11,6 +11,7 @@ import { onFrame, reduceMotion } from '../lib/core.js';
 import { clamp, easeInOutCubic } from '../lib/math.js';
 import { lenis as pageLenis } from './smooth-scroll.js';
 import { addParallaxImgs } from './parallax.js';
+import { initNavHover } from './nav-hover.js';
 
 // top:   hoeveel van de homepage boven het vel zichtbaar is (deel van de schermhoogte; Figma 134/841)
 // grow:  beginmaat van [data-grow] (Figma 497/1392)
@@ -37,6 +38,7 @@ function open(sheet, { animate, pushed }) {
   pageLenis?.stop();
   const lenis = reduceMotion ? null : new Lenis({ wrapper: box, content: sheet, duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
   addParallaxImgs(sheet.querySelectorAll('[data-parallax-img]'));
+  initNavHover(sheet);
   view = { wrap, box, sheet, grows: [...sheet.querySelectorAll('[data-grow]')], lenis, pushed };
   wrap.addEventListener('click', (e) => { if (e.target === wrap) close(); });
   sheet.querySelectorAll('[data-project-close]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); close(); }));

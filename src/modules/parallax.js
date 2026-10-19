@@ -2,6 +2,7 @@
 //  [data-hero]           de header (bepaalt hoe lang het effect duurt)
 //  [data-parallax-hero]  lagen in de header die trager meebewegen
 //  [data-parallax-img]   foto die binnen zijn kader schuift (kader heeft overflow: hidden)
+//  [data-parallax-footer] inhoud van de footer (footer heeft overflow: hidden): loopt trager binnen, omgekeerd van de header
 import { onFrame, reduceMotion } from '../lib/core.js';
 
 const HERO_SPEED = reduceMotion ? 0 : 0.3; // 0 = normaal scrollen, 1 = staat stil
@@ -24,6 +25,12 @@ export function initParallax() {
     for (const l of layers) l.style.transform = `translate3d(0, ${parallaxState.heroShift}px, 0)`;
     if (reduceMotion) return;
     const vh = window.innerHeight;
+    // Footer: omgekeerd van de header; inhoud loopt trager binnen en komt van onder de vorige sectie
+    for (const f of document.querySelectorAll('[data-parallax-footer]')) { // ook footers in een later geopend projectvel
+      const r = f.parentElement.getBoundingClientRect(); // het footer-vak zelf (overflow: hidden)
+      const left = Math.min(Math.max(r.bottom - vh, 0), r.height); // nog te scrollen tot de footer helemaal in beeld is
+      f.style.transform = `translate3d(0, ${-left * HERO_SPEED}px, 0)`;
+    }
     for (const img of imgs) {
       if (!img.isConnected) continue;
       const r = img.parentElement.getBoundingClientRect();

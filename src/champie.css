@@ -43,13 +43,33 @@ html.lenis, html.lenis body { height: auto; }
 .project_follow img { width: 100%; height: 100%; object-fit: cover; display: block; }
 @media (hover: none) { .project_follow { display: none; } }
 
-/* ===== Diensten: rij staat vast (top via services.js), de grote maat schuift door de lijst ===== */
-[data-services] { position: sticky; }
-[data-service-wheel] [data-service] { position: absolute; top: 0; left: 0; right: 0; will-change: transform; }
-[data-service] > :not([data-service-mark]) { transform-origin: 0 0; }
-[data-service-mark] { opacity: 0; transform: scale(.3); transition: opacity .3s ease, transform .4s cubic-bezier(.22,1,.36,1); }
-[data-service].is-active [data-service-mark] { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-service-mark] { transition: none; } }
+/* ===== Sectielabel: geel vakje met "/" ervoor ===== */
+[data-label] { display: inline-flex; align-items: center; gap: 10px; }
+[data-label]::before { content: "/"; flex: none; display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; background: #FFC82E; color: #0E0E10; font: 600 11px/1 "Fira Code", monospace; }
+
+/* ===== Nav-hover: zwart vak, tekst rolt omhoog naar geel (nav-hover.js) ===== */
+[data-nav-link] { position: relative; isolation: isolate; text-decoration: none; }
+[data-nav-link]::before { content: ""; position: absolute; inset: -4px -8px; z-index: -1; background: #0E0E10; border-radius: 2px; opacity: 0; transform: scale(.85); transition: opacity .25s ease, transform .4s cubic-bezier(.34,1.56,.64,1); }
+[data-nav-link]:hover::before { opacity: 1; transform: none; }
+.nh_clip { display: block; height: 1.2em; overflow: hidden; }
+.nh_track { display: flex; flex-direction: column; transition: transform .5s cubic-bezier(.76,0,.24,1); }
+.nh_track > span { display: block; height: 1.2em; white-space: nowrap; }
+.nh_alt { color: #FFC82E; }
+[data-nav-link]:hover .nh_track { transform: translateY(-50%); }
+[data-nav-link] svg { transition: color .3s ease; }
+[data-nav-link]:hover svg { color: #FFC82E; }
+
+/* ===== Diensten: pijl-vakje verschijnt bij hover op een rij ===== */
+[data-row-icon] { opacity: 0; transform: scale(.5); transition: opacity .25s ease, transform .35s cubic-bezier(.34,1.56,.64,1); }
+[data-service-row]:hover [data-row-icon] { opacity: 1; transform: none; }
+
+/* ===== Insights: pijl schuift voor de titel, leestijd verdwijnt bij hover ===== */
+[data-insight-arrow] { flex: none; width: 0; margin-right: -8px; opacity: 0; transition: width .4s cubic-bezier(.22,1,.36,1), margin .4s cubic-bezier(.22,1,.36,1), opacity .3s ease; }
+[data-insight]:hover [data-insight-arrow] { width: 15px; margin-right: 0; opacity: 1; }
+[data-insight-time] { transition: opacity .3s ease; }
+[data-insight]:hover [data-insight-time] { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) { .nh_track, [data-nav-link]::before, [data-row-icon], [data-insight-arrow] { transition: none; } }
 
 /* ===== Projectpagina: vel over de wazige homepage (project-page.js) ===== */
 .cpp { position: fixed; inset: 0; z-index: 60; background: rgba(14,14,16,0); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); transition: background 1.1s ease, backdrop-filter 1.1s ease, -webkit-backdrop-filter 1.1s ease; }

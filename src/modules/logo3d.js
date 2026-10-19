@@ -1,11 +1,13 @@
 // 3D-logo (Three.js)
 //  [data-logo3d]          het vak in de header waar het grote logo staat
 //  [data-logo3d-trigger]  zodra dit element half uit beeld is, vliegt het logo naar het menu
+//  [data-logo3d-footer]   plek in de footer: komt die in beeld, dan gaat het menu weg en vliegt het logo erheen
 //
 // Gedrag:
 //  - In rust draait het hele hoofd rond (voorkant langzaam, achterkant snel); het oog staat stil zoals het logo.
 //  - Muis beweegt: hij draait door naar de voorkant, kantelt naar de cursor en het oog kijkt mee.
 //  - Scrollen: het logo vliegt in één vloeiende beweging naar het gele vak van de menu-balk.
+//  - Bij de footer: het menu verdwijnt en het logo vliegt uit het menu naar de footer (en terug bij omhoog scrollen).
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/+esm';
 import { SVGLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/SVGLoader.js/+esm';
 import { onFrame, pointer, reduceMotion, viewW, viewH } from '../lib/core.js';
@@ -34,6 +36,8 @@ const C = {
   logoCenterY: 0.58,      // verticale positie in het header-vak (0 = boven, 1 = onder)
   smallHeight: 25,        // hoogte (px) van het logo in het gele menu-vak
   morphTime:   1.1,       // duur (s) van de overgang groot -> klein
+  footerAt:    0.8,       // logo gaat naar de footer als het midden van de footer-plek boven deze schermhoogte komt (0 = boven, 1 = onder)
+  footerSize:  1,         // logohoogte t.o.v. de footer-plek
 };
 /* ======================== */
 
@@ -145,13 +149,26 @@ export function initLogo3d({ anchor, trigger, menu }) {
   let morph = inMenu() ? 1 : 0; // 0 = groot, 1 = in het menu
   if (!anchor) menu.el.classList.add('is-on', 'is-static'); // projectpagina: menu meteen vast in beeld
 
+  // Footer-plek die nu telt: in het projectvel als dat open is, anders die op de pagina zelf (niet de wazige home erachter)
+  const footerSpot = () => {
+    const open = document.documentElement.classList.contains('project-open');
+    for (const el of document.querySelectorAll('[data-logo3d-footer]'))
+      if (!el.closest('.cpp_home') && !!el.closest('.cpp') === open) return el;
+    return null;
+  };
+  let foot = 0, footRect = null; // 0 = menu/header, 1 = in de footer
+
   onFrame((now, dt) => {
     const vw = viewW(), vh = viewH();
     if (renderer.domElement.width !== Math.floor(vw * renderer.getPixelRatio())) resize();
 
     // Overgang groot -> menu: speelt in één keer af
     const target = inMenu() ? 1 : 0;
-    menu.setVisible(target === 1);
+    const spot = footerSpot();
+    if (spot) footRect = spot.getBoundingClientRect();
+    const toFoot = !!spot && footRect.top + footRect.height / 2 < vh * C.footerAt && footRect.bottom > 0;
+    foot = reduceMotion ? +toFoot : toFoot ? Math.min(1, foot + dt / C.morphTime) : Math.max(0, foot - dt / C.morphTime);
+    menu.setVisible(target === 1 && !toFoot);
     morph = reduceMotion ? target : target > morph ? Math.min(1, morph + dt / C.morphTime) : Math.max(0, morph - dt / C.morphTime);
     const p = easeInOutQuart(morph);
     const py = easeInOutCubic(morph); // y iets eerder dan x = zachte boog
@@ -160,9 +177,15 @@ export function initLogo3d({ anchor, trigger, menu }) {
     const startH = a.height * C.logoHeight;
     const startY = a.top + a.height * C.logoCenterY + parallaxState.heroShift;
     const end = menu.boxCenter();
-    const h = lerp(startH, C.smallHeight, p);
-    const cx = lerp(vw / 2, end.x, p);
-    const cy = lerp(startY, end.y, py);
+    let h = lerp(startH, C.smallHeight, p);
+    let cx = lerp(vw / 2, end.x, p);
+    let cy = lerp(startY, end.y, py);
+    if (foot > 0 && footRect) { // uit het menu naar de footer: zelfde beweging, omgekeerd
+      const pf = easeInOutQuart(foot);
+      h = lerp(h, footRect.height * C.footerSize, pf);
+      cx = lerp(cx, footRect.left + footRect.width / 2, pf);
+      cy = lerp(cy, footRect.top + footRect.height / 2, easeInOutCubic(foot));
+    }
     logo.scale.setScalar((h * VIEW / vh) / H);
     camera.setViewOffset(vw, vh, -(cx - vw / 2), -(cy - vh / 2), vw, vh);
 
