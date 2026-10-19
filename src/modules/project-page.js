@@ -48,7 +48,8 @@ function open(sheet, { animate, pushed }) {
 // Inhoud bouwt zich op: vel blijft eerst leeg, dan komt alles rustig na elkaar binnen.
 // Titel schuift omhoog uit een masker, blokken komen op, beelden kantelen plat.
 function reveal(sheet, delay) {
-  const seen = (el) => el.getBoundingClientRect().top < innerHeight;
+  const top = sheet.getBoundingClientRect().top; // vel staat nog onder het scherm: meten vanaf de bovenkant van het vel
+  const seen = (el) => el.getBoundingClientRect().top - top < innerHeight;
   const blocks = [...sheet.children].filter(seen);
   blocks.forEach((el, i) =>
     el.animate([{ opacity: 0, transform: 'translateY(30px)' }, { opacity: 1, transform: 'none' }],
