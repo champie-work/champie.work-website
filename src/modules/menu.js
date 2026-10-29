@@ -1,23 +1,32 @@
-// Menu-balk onderaan in het midden: geel logo-vak + Menu-knop.
-// Wordt door het script zelf op de pagina gezet. Het menu-ontwerp zelf volgt later:
-// bij openen krijgt <html> de class "menu-open".
+// Menu-balk onderaan in het midden: geel logo-vak + gele balk met links (Figma "Frame 221").
+// Wordt door het script zelf op de pagina gezet. Het 3D-logo vliegt in het logo-vak.
+// Links scrollen naar secties op home ([id="projects"], [id="services"]); op een andere pagina gaan ze naar home.
+// About en Process doen nog niets (komen later als eigen pagina's).
+import { lenis } from './smooth-scroll.js';
 
-const ICON = '<svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M0 0H18V2H0V0ZM0 6H13V8H0V6ZM0 12H8V14H0V12Z" fill="#0E0E10"/></svg>';
+const LINKS = [
+  ['Projects', 'projects'],
+  ['Services', 'services'],
+  ['About', null],
+  ['Process', null],
+];
+
+const isHome = () => !!document.querySelector('[data-logo3d]');
 
 export function initMenu() {
   const nav = document.createElement('nav');
   nav.className = 'cmenu';
   nav.setAttribute('aria-label', 'Menu');
-  nav.innerHTML = `<div class="cmenu_logo" aria-hidden="true"></div>
-    <button class="cmenu_btn" type="button" aria-expanded="false">${ICON}<span>Menu</span></button>`;
+  const links = LINKS.map(([label, id]) =>
+    `<a class="cmenu_link" data-nav-link${id ? ` href="${isHome() ? '' : '/'}#${id}"` : ''}>${label}</a>`).join('');
+  nav.innerHTML = `<a class="cmenu_logo" href="/" aria-label="Naar boven"></a><div class="cmenu_bar">${links}</div>`;
   document.body.appendChild(nav);
 
   const box = nav.querySelector('.cmenu_logo');
-  const btn = nav.querySelector('.cmenu_btn');
-  btn.addEventListener('click', () => {
-    const open = btn.getAttribute('aria-expanded') !== 'true';
-    btn.setAttribute('aria-expanded', String(open));
-    document.documentElement.classList.toggle('menu-open', open);
+  box.addEventListener('click', (e) => {
+    if (!isHome()) return; // gewoon naar home
+    e.preventDefault();
+    lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   return {

@@ -8,4 +8,12 @@ export function initSmoothScroll() {
   if (reduceMotion) return;
   lenis = new Lenis({ duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
   onFrame((now) => lenis.raf(now));
+  // Links naar een sectie op deze pagina (#projects, #services): zacht scrollen
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    const el = a && a.getAttribute('href').length > 1 && document.getElementById(a.getAttribute('href').slice(1));
+    if (!el) return;
+    e.preventDefault();
+    lenis.scrollTo(el);
+  });
 }
