@@ -88,22 +88,29 @@ html.project-open { overflow: hidden; }
 /* ===== Klok: "Enschede" voor de tijd (clock.js) ===== */
 [data-clock="enschede"]::before { content: "Enschede "; }
 
-/* ===== Open-for-work vakje: ruit -> vierkant (rimpel) -> ruit en zendt een zachte rimpel uit ===== */
+/* ===== Open-for-work vakje (zoals de referentie, 2s per rondje):
+   vierkant met grote rimpel die vervaagt -> rustig draaien naar ruit -> even stil ->
+   terugdraaien naar vierkant terwijl de rimpel weer groeit ===== */
 [data-status-dot] {
-  --dot-speed: 2.4s;   /* duur van één rondje */
-  --dot-ripple: 2.4;   /* hoe groot de rimpel wordt */
-  --dot-strength: .4;  /* hoe zichtbaar de rimpel begint */
+  --dot-speed: 2s;     /* duur van één rondje */
+  --dot-ripple: 2;     /* hoe groot de rimpel wordt */
+  --dot-strength: .3;  /* hoe zichtbaar de rimpel is */
   position: relative;
-  animation: cdot-turn var(--dot-speed) cubic-bezier(.65,0,.35,1) infinite;
+  animation: cdot-turn var(--dot-speed) infinite;
 }
 [data-status-dot]::after {
   content: ""; position: absolute; inset: 0; background: inherit; opacity: 0;
-  animation: cdot-ripple var(--dot-speed) cubic-bezier(.2,.6,.3,1) infinite;
+  animation: cdot-ripple var(--dot-speed) linear infinite;
 }
-@keyframes cdot-turn { 0%, 30% { transform: rotate(45deg); } 50%, 65% { transform: rotate(90deg); } 85%, 100% { transform: rotate(135deg); } }
+@keyframes cdot-turn {
+  0%, 25% { transform: rotate(90deg); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  53%, 80% { transform: rotate(135deg); animation-timing-function: cubic-bezier(.45,0,.55,1); }
+  100% { transform: rotate(180deg); }
+}
 @keyframes cdot-ripple {
-  0%, 48% { transform: scale(1); opacity: 0; }
-  50% { opacity: var(--dot-strength); }
-  100% { transform: scale(var(--dot-ripple)); opacity: 0; }
+  0% { transform: scale(var(--dot-ripple)); opacity: var(--dot-strength); }
+  16% { transform: scale(var(--dot-ripple)); opacity: 0; }
+  80% { transform: scale(1); opacity: 0; }
+  100% { transform: scale(var(--dot-ripple)); opacity: var(--dot-strength); }
 }
 @media (prefers-reduced-motion: reduce) { [data-status-dot], [data-status-dot]::after { animation: none; } }
