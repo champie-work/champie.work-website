@@ -36,12 +36,14 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-marquee` / `data-marquee-track` | gele band en de rij tekst erin | oneindige band naar rechts (`marquee.js`, CONFIG `speed`) |
 | `data-footer` / `data-parallax-footer` | footer (overflow hidden) en de inhoud | inhoud loopt trager binnen, omgekeerd van de header |
 | `data-logo3d-footer` | plek in de footer | menu gaat weg, logo vliegt uit het menu hierheen (`logo3d.js`, `footerAt`) |
-| `data-clock="enschede"` | tekst met de tijd | live klok (`clock.js`), ook in de footer |
+| `data-clock="enschede"` | tekst met de tijd | live klok "Enschede 18:00:00" (`clock.js`), ook in de footer |
+| `data-date="enschede"` | tekst met de datum | live datum "Monday, Oct 19" (`clock.js`) |
+| `data-nav-dark` | balk met `data-nav-link`s op zwart | hover wordt geel vak, tekst rolt naar zwart |
 | `data-project-page="naam"` | wrapper om een hele projectpagina | modal over de wazige homepage: vak blijft staan, inhoud scrollt erin. Overgang: vel komt smal op en wordt breed, `h1` schuift uit een masker, beelden kantelen plat (`project-page.js`, CONFIG `tilt`/`delay`/`stagger`) |
 | `data-project-close` | de Close-link (href `/`) | sluit het vel (ook: Esc, klik op de wazige rand, terug-knop) |
 | `data-grow` | beeld in een projectpagina | begint klein (`CONFIG.grow`) en wordt volle maat tijdens scrollen |
 
-De menu-balk en het 3D-logo zet het script zelf op elke pagina. Home: het menu verschijnt als het logo erin vliegt. Projectpagina (geen `data-logo3d`): menu en logo staan er meteen, zonder animatie, boven het vel. Openen geeft `<html>` de class `menu-open`.
+De menu-balk (logo-vak + Projects/Services/About/Process) en het 3D-logo zet het script zelf op elke pagina. Links met `#id` of `/#id` scrollen zacht naar die sectie (`smooth-scroll.js`); logo-vak = naar boven. Home: het menu verschijnt als het logo erin vliegt. Projectpagina (geen `data-logo3d`): menu en logo staan er meteen, zonder animatie, boven het vel. Openen geeft `<html>` de class `menu-open`.
 
 ## Testen
 
