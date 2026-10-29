@@ -36,6 +36,7 @@ Iets mis? Zet het nummer terug naar de vorige versie.
 | `data-marquee` / `data-marquee-track` | gele band en de rij tekst erin | oneindige band naar rechts (`marquee.js`, CONFIG `speed`) |
 | `data-footer` / `data-parallax-footer` | footer (overflow hidden) en de inhoud | inhoud loopt trager binnen, omgekeerd van de header |
 | `data-logo3d-footer` | plek in de footer | menu gaat weg, logo vliegt uit het menu hierheen (`logo3d.js`, `footerAt`) |
+| `data-status-dot` | het open-for-work vakje (header en footer) | draait een kwartslag en zendt een zachte rimpel uit (CSS-variabelen in `champie.css`) |
 | `data-clock="enschede"` | tekst met de tijd | live klok "Enschede 18:00:00" (`clock.js`), ook in de footer |
 | `data-date="enschede"` | tekst met de datum | live datum "Monday, Oct 19" (`clock.js`) |
 | `data-nav-dark` | balk met `data-nav-link`s op zwart | hover wordt geel vak, tekst rolt naar zwart |
