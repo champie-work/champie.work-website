@@ -32,8 +32,8 @@ const C = {
   spinFast:    8,         // draaisnelheid achterlangs (rad/s)
   spinDelay:   2.5,       // seconden muis-stilstand voordat het draaien weer begint
   spinHome:    7,         // hoe snel hij bij muisbeweging doordraait naar de voorkant
-  logoHeight:  0.512,     // logohoogte t.o.v. het header-vak
-  logoCenterY: 0.58,      // verticale positie in het header-vak (0 = boven, 1 = onder)
+  logoHeight:  0.92,      // logohoogte t.o.v. het header-vak (vak = ruimte onder de nav-balk)
+  logoCenterY: 0.5,       // verticale positie in het header-vak (0 = boven, 1 = onder)
   smallHeight: 25,        // hoogte (px) van het logo in het gele menu-vak
   morphTime:   1.1,       // duur (s) van de overgang groot -> klein
   footerAt:    0.8,       // logo gaat naar de footer als het midden van de footer-plek boven deze schermhoogte komt (0 = boven, 1 = onder)
