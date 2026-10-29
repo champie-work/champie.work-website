@@ -84,3 +84,6 @@ html.lenis, html.lenis body { height: auto; }
 html.project-open { overflow: hidden; }
 [data-grow] { transform-origin: 50% 0; will-change: transform; }
 @media (prefers-reduced-motion: reduce) { .cpp, .cpp_box { transition: none; } }
+
+/* ===== Klok: "Enschede" voor de tijd (clock.js) ===== */
+[data-clock="enschede"]::before { content: "Enschede "; }
