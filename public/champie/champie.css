@@ -11,21 +11,25 @@ html.lenis, html.lenis body { height: auto; }
 .champie-3d { position: fixed; inset: 0; z-index: 71; pointer-events: none; } /* boven menu (70) en projectvel (60) */
 [data-parallax-hero] { will-change: transform; }
 
-/* ===== Menubalk bovenaan (Figma "MENU POPUP", HTML in src/components/Menu.astro) ===== */
+/* ===== Menubalk bovenaan (Figma "MENU POPUP", HTML in src/components/Menu.astro) =====
+   Popt omhoog zodra de gele header uit beeld is (menu.js zet .is-on). */
 .cmenu { position: fixed; top: 24px; left: 24px; right: 24px; z-index: 70; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
 .cmenu_left { display: flex; gap: 5px; }
-.cmenu_logo { display: block; width: 40px; height: 40px; border-radius: 1px; background: #FFC82E; transform: scale(.3); opacity: 0; transition: transform .35s cubic-bezier(.55,0,1,.45), opacity .25s ease; }
-.cmenu_cta { display: flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 1px; background: #FFC82E; color: #0D0D0D; font: 700 20px/1 Geist, Arial, sans-serif; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; clip-path: inset(0 100% 0 0); transition: clip-path .35s cubic-bezier(.55,0,1,.45); }
-.cmenu_nav { --nav-color: #FBFAF7; font-size: 20px; }
-.cmenu_nav .nav_link { opacity: 0; transform: translateY(-10px); transition: transform .3s ease, opacity .2s ease; }
+.cmenu_logo, .cmenu_cta, .cmenu_nav .nav_col { opacity: 0; transform: translateY(18px) scale(.92); transition: transform .25s ease, opacity .2s ease; }
+.cmenu_logo { display: block; width: 40px; height: 40px; border-radius: 1px; background: #FFC82E; }
+.cmenu_logo svg { display: block; width: 100%; height: 100%; }
+.cmenu_cta { display: flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 1px; background: #FFC82E; color: #0D0D0D; font: 700 20px/1 Geist, Arial, sans-serif; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; }
 .cmenu.is-on { pointer-events: auto; }
-.cmenu.is-on .cmenu_logo { transform: none; opacity: 1; transition: transform .7s cubic-bezier(.34,1.56,.64,1) .45s, opacity .3s ease .45s; }
-.cmenu.is-on .cmenu_cta { clip-path: inset(0 0 0 0); transition: clip-path .8s cubic-bezier(.76,0,.24,1) .7s; }
-.cmenu.is-on .nav_link { opacity: 1; transform: none; transition: transform .8s cubic-bezier(.22,1,.36,1) .95s, opacity .5s ease .95s; }
+.cmenu.is-on .cmenu_logo, .cmenu.is-on .cmenu_cta, .cmenu.is-on .cmenu_nav .nav_col { opacity: 1; transform: none; transition: transform .6s cubic-bezier(.34,1.56,.64,1), opacity .3s ease; }
+.cmenu.is-on .cmenu_cta { transition-delay: .05s; }
+.cmenu.is-on .cmenu_nav .nav_col:nth-child(1) { transition-delay: .1s; }
+.cmenu.is-on .cmenu_nav .nav_col:nth-child(2) { transition-delay: .15s; }
+.cmenu.is-on .cmenu_nav .nav_col:nth-child(3) { transition-delay: .2s; }
 .cmenu a:focus-visible { outline: 2px solid #FFC82E; outline-offset: 3px; }
 @media (max-width: 767px) { .cmenu { top: 16px; left: 16px; right: 16px; } .cmenu_nav { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cmenu * { transition: none !important; } }
 
-/* Pagina zonder header-logo (projectpagina): menu staat er meteen, zonder animatie */
+/* Pagina zonder header (projectpagina): menu staat er meteen, zonder animatie */
 .cmenu.is-static, .cmenu.is-static * { transition: none !important; }
 
 /* ===== Parallax-foto's: iets groter dan hun kader ===== */
