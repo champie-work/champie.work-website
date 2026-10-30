@@ -1,6 +1,8 @@
 // Cloudflare Workers: alleen statische bestanden uit dist (Astro-build).
+// "previews": elke branch krijgt een eigen testlink (<branch>-champie-work-website....workers.dev).
 {
   "name": "champie-work-website",
   "compatibility_date": "2026-10-01",
-  "assets": { "directory": "./dist", "not_found_handling": "404-page" }
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" },
+  "previews": {}
 }
