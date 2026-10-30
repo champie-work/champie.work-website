@@ -32,9 +32,9 @@ const C = {
   spinFast:    8,         // draaisnelheid achterlangs (rad/s)
   spinDelay:   2.5,       // seconden muis-stilstand voordat het draaien weer begint
   spinHome:    7,         // hoe snel hij bij muisbeweging doordraait naar de voorkant
-  logoHeight:  0.92,      // logohoogte t.o.v. het header-vak (vak = ruimte onder de nav-balk)
+  logoHeight:  1,         // logohoogte t.o.v. het header-vak ([data-logo3d] = precies het logo in Figma)
   logoCenterY: 0.5,       // verticale positie in het header-vak (0 = boven, 1 = onder)
-  smallHeight: 25,        // hoogte (px) van het logo in het gele menu-vak
+  smallHeight: 29,        // hoogte (px) van het logo in het gele menu-vak (Figma: 29 in een vak van 40)
   morphTime:   1.1,       // duur (s) van de overgang groot -> klein
   footerAt:    0.8,       // logo gaat naar de footer als het midden van de footer-plek boven deze schermhoogte komt (0 = boven, 1 = onder)
   footerSize:  1,         // logohoogte t.o.v. de footer-plek

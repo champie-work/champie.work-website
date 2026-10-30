@@ -1,0 +1,13 @@
+---
+// Menubalk bovenaan (Figma "MENU POPUP"). Verschijnt na de hero; het 3D-logo vliegt in het gele vak.
+// Zichtbaarheid en animatie: public/champie/modules/menu.js + champie.css (.cmenu).
+import Nav from './Nav.astro';
+import { startProject } from '../data/site.js';
+---
+<div class="cmenu" data-menu>
+  <div class="cmenu_left">
+    <a class="cmenu_logo" href="/" aria-label="Naar boven"></a>
+    <a class="cmenu_cta" href={startProject.href}>{startProject.label}</a>
+  </div>
+  <Nav class="cmenu_nav" dark />
+</div>
