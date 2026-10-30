@@ -1,9 +1,10 @@
-/* Champie V2 (Figma "v2 web"). Alle maten komen uit Figma (1440 breed) en schalen mee: calc(N * var(--u)).
+/* Champie V2 (Figma "v2 web"). Alle maten komen uit Figma (1440 breed): calc(N * var(--u)).
+   Vanaf 1440 breed is --u precies 1px (Figma-maten exact); op smallere schermen schaalt alles mee omlaag.
    Tekst heeft line-height 1.3 (= Figma "auto" bij Geist); marges zijn zo berekend dat de hoofdletters
    op dezelfde plek staan als in Figma. Animatie-stijlen staan in public/champie/champie.css. */
 
 :root {
-  --u: calc(100vw / 1440);
+  --u: min(1px, calc(100vw / 1440));
   --yellow: #ffc82e;
   --dark: #0d0d0d;
   --light: #fbfaf7;
@@ -33,15 +34,16 @@ p { margin: 0; }
 .cmenu_nav .nav_link { font-size: 20px; }
 
 /* ===== Hero ===== */
-.hero { position: relative; display: flex; flex-direction: column; height: max(100vh, calc(453 * var(--u) + 200px)); padding: calc(24 * var(--u)) calc(24 * var(--u)) calc(94 * var(--u)); background: var(--yellow); color: var(--dark); overflow: hidden; }
+.hero { position: relative; display: flex; flex-direction: column; height: max(100vh, calc((100vw - 48 * var(--u)) * 307 / 1392 + 346 * var(--u))); padding: calc(24 * var(--u)) calc(24 * var(--u)) calc(94 * var(--u)); background: var(--yellow); color: var(--dark); overflow: hidden; }
 .hero_wordmark { margin: 0; line-height: 0; }
 .hero_wordmark svg { display: block; width: 100%; height: auto; }
 .hero_row { display: flex; justify-content: space-between; align-items: flex-start; margin-top: calc(-2.9 * var(--u)); }
 .hero_contact { display: flex; gap: calc(30 * var(--u)); }
 .status { display: flex; align-items: center; gap: calc(10 * var(--u)); font-weight: 600; font-size: calc(20 * var(--u)); line-height: 1.3; text-decoration: none; }
 .status_dot { width: calc(14 * var(--u)); height: calc(14 * var(--u)); background: currentColor; }
-/* Logo-vak: van de nav-rij tot vlak boven de onderste rij (Figma 334 tot 781 bij 1440x900); past zich aan de schermhoogte aan */
-.hero_logo3d { position: absolute; left: 0; right: 0; top: calc(334 * var(--u)); bottom: calc(119 * var(--u)); pointer-events: none; }
+/* Logo-vak: van de nav-rij (direct onder het woordmerk, dat over de volle breedte loopt) tot vlak boven de onderste rij.
+   Bij 1440x900 precies Figma (334 tot 781); past zich aan schermbreedte en -hoogte aan. */
+.hero_logo3d { position: absolute; left: 0; right: 0; top: calc(27 * var(--u) + (100vw - 48 * var(--u)) * 307 / 1392); bottom: calc(119 * var(--u)); pointer-events: none; }
 .hero_bottom { display: flex; justify-content: space-between; align-items: flex-start; margin-top: auto; }
 
 /* Secties na de hero schuiven over de hero heen (parallax) */
