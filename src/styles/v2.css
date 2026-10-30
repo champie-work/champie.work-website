@@ -171,13 +171,13 @@ p { margin: 0; }
 .talk_link:hover svg { transform: translate(2px, -2px); }
 
 /* About */
-.about_title { margin-top: calc(167.9 * var(--u)); width: calc(1146 * var(--u)); }
+.about_title { margin-top: calc(167.9 * var(--u)); white-space: nowrap; }
 .about_me { display: flex; gap: calc(24 * var(--u)); margin: calc(289.9 * var(--u)) 0 0 calc(118 * var(--u)); }
 .about_photo { display: block; flex: none; width: calc(330 * var(--u)); height: calc(420 * var(--u)); object-fit: cover; background: var(--yellow); }
 .about_me_text { display: flex; flex-direction: column; justify-content: space-between; }
 .about_year { margin-top: calc(-4.72 * var(--u)); font-family: 'Geist Mono', monospace; font-weight: 500; font-size: calc(16 * var(--u)); line-height: 1.3; }
 .about_hi { margin: 0 0 calc(-9.78 * var(--u)); font-weight: 600; font-size: calc(64 * var(--u)); line-height: calc(65 * var(--u)); }
-.about_services { margin-top: calc(80 * var(--u)); }
+.about_services { margin-top: calc(84 * var(--u)); }
 .about_21 { width: calc(448 * var(--u)); margin: calc(243.9 * var(--u)) auto 0; text-align: center; font-size: calc(24 * var(--u)); line-height: 1.3; }
 .about_build { margin-top: calc(244.6 * var(--u)); font-size: calc(128 * var(--u)); line-height: calc(115 * var(--u)); }
 .about_story { display: flex; gap: calc(260 * var(--u)); margin: calc(214.2 * var(--u)) 0 0 calc(130 * var(--u)); }
@@ -189,6 +189,7 @@ p { margin: 0; }
 
 /* Process */
 .process_title { margin-top: calc(167.9 * var(--u)); white-space: nowrap; }
+.process_title .page_eye { margin-left: calc(3 * var(--u)); }
 .steps { display: grid; grid-template-columns: repeat(3, calc(330 * var(--u))); justify-content: space-between; }
 .steps_1 { margin-top: calc(198.8 * var(--u)); }
 .steps_2 { margin-top: calc(210 * var(--u)); }
@@ -210,7 +211,7 @@ p { margin: 0; }
 .start_faq h2 { margin: calc(57.1 * var(--u)) 0 0; font-weight: 600; font-size: calc(64 * var(--u)); line-height: 1.3; }
 .start_faq .mono { margin-top: calc(16.5 * var(--u)); color: #f2f2f2; }
 .start_faq .faq_list { color: #f2f2f2; }
-.start { padding-bottom: calc(165 * var(--u)); }
+.start { padding-bottom: calc(159 * var(--u)); }
 
 /* ===== Mobiel: tijdelijk alles onder elkaar (mobiel ontwerp volgt) ===== */
 @media (max-width: 767px) {
