@@ -1,7 +1,7 @@
 // node --test
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TAU, spring, nextFront, follow } from '../src/lib/math.js';
+import { TAU, spring, nextFront, follow } from '../public/champie/lib/math.js';
 
 test('veer komt aan zonder door te schieten', () => {
   const s = { x: 0, v: 0 };
@@ -24,7 +24,7 @@ test('volgen is gelijk op 60 en 120 Hz', () => {
   assert.ok(Math.abs(a - b) < 1e-9);
 });
 
-import { wheelScale } from '../src/lib/math.js';
+import { wheelScale } from '../public/champie/lib/math.js';
 
 test('maatgolf: maat per afstand, ook tussen de stappen en voorbij het eind', () => {
   const s = [1, 0.625, 0.5, 0.3125];

@@ -1,0 +1,14 @@
+{
+  "name": "champie-work",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "node --test test/math.test.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}

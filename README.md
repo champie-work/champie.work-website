@@ -1,19 +1,23 @@
-# champie.work-website
+# champie.work (Astro)
 
-Animaties en interactie voor [champie.work](https://champie.work) (Webflow).
-Geen build-stap: gewone ES-modules, geladen via jsDelivr.
+Site [champie.work](https://champie.work), gebouwd met [Astro](https://astro.build). Hosting op Cloudflare Pages.
 
-## In Webflow laden
-
-Eén embed (in een Symbol die op elke pagina staat), met een vaste versie:
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/champie-work/champie.work-website@v1.0.0/src/champie.css">
-<script type="module" src="https://cdn.jsdelivr.net/gh/champie-work/champie.work-website@v1.0.0/src/main.js"></script>
+## Lokaal draaien
+```
+npm install
+npm run dev      # http://localhost:4321
 ```
 
-Nieuwe versie live zetten = nieuwe tag maken (bv. `v1.0.1`) en het versienummer in de embed aanpassen.
-Iets mis? Zet het nummer terug naar de vorige versie.
+## Waar staat wat
+```
+src/pages/index.astro              homepage
+src/pages/project/ralph-lauren.astro  projectpagina (kopiëren = nieuw project)
+src/layouts/Base.astro             head, fonts, scripts
+src/components/Footer.astro        footer
+src/styles/site.css                opmaak
+public/champie/                    animaties (3D-logo, parallax, menu, ...), zie data-attributen hieronder
+public/img/                        beelden
+```
 
 ## Data-attributen
 
@@ -52,24 +56,3 @@ De menu-balk (logo-vak + Projects/Services/About/Process) en het 3D-logo zet het
 node --test test/math.test.mjs
 ```
 
-## Bestanden
-
-```
-test/math.test.mjs        tests voor lib/math.js
-src/
-  main.js                 startpunt, zet de modules aan
-  champie.css             stijlen voor alles hieronder
-  lib/core.js             één animatie-loop en de muisstatus
-  lib/math.js             veer, easing en andere rekenhulpjes (getest)
-  modules/
-    smooth-scroll.js      Lenis
-    parallax.js           header-parallax en foto-parallax
-    menu.js               menu-balk onderaan
-    logo3d.js             3D-logo (Three.js), instellingen bovenin
-    project-hover.js      titel-roll en zwevende foto
-    eye.js                meekijkend oog in tekst
-    nav-hover.js          nav-links: zwart vak + tekst-roll
-    marquee.js            oneindige tekstband
-    clock.js              live klok Enschede
-    project-page.js       projectpagina als vel over de wazige homepage
-```

@@ -1,5 +1,11 @@
 # champie.work-website
 
+> **Branch `astro`**: de site zelf als Astro-project (migratie weg van Webflow). Hosting: Cloudflare Pages (build `npm run build`, output `dist`).
+> - Pagina's: `src/pages/` (home = `index.astro`, projecten = `src/pages/project/<naam>.astro`; nieuw project = bestand kopiëren).
+> - Gedeeld: `src/layouts/Base.astro` (head + scripts), `src/components/Footer.astro`, stijlen `src/styles/site.css`.
+> - De animatie-scripts staan ongewijzigd in `public/champie/` (was `src/`), beelden in `public/img/` (was `assets/`).
+> - Alles hieronder over Webflow/jsDelivr geldt alleen voor branch `main` (huidige Webflow-site).
+
 Code for the animations and interaction on champie.work. The site itself is built in Webflow (site id `6ad1083b76cf28f6ee90f556`, home page `6ad1083d76cf28f6ee90f577`).
 
 ## How it is wired

@@ -1,0 +1,51 @@
+---
+// Projectpagina. Nieuw project: kopieer dit bestand, pas teksten/beelden aan.
+// Houd de data-attributen (data-project-page, data-project-close, data-grow, data-parallax-img).
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+const ph = '/img/placeholder-gray.png';
+---
+<Base title="Ralph Lauren | champie.work">
+  <div data-project-page="ralph-lauren" class="pp">
+    <div class="pp-header">
+      <a href="/" data-project-close class="pp-close">Close</a>
+      <div class="pp-header-text">A Study in Timeless Style</div>
+      <div class="pp-header-text pp-header-year">2026</div>
+    </div>
+    <div class="pp-intro">
+      <div>
+        <h1 class="pp-title">Ralph Lauren</h1>
+        <div class="pp-facts"><div>Fashion</div><div>Colorado,USA</div></div>
+      </div>
+      <div class="pp-intro-right">
+        <div class="pp-square"></div>
+        <p class="pp-lead">An independent visual exploration of Ralph Lauren's campaign aesthetic, focusing on timeless tailoring, American heritage and cinematic fashion photography.</p>
+      </div>
+    </div>
+    <div class="pp-label pp-label-center">RALPHLAUREN-01</div>
+    <div data-grow class="pp-grow"><img src="/img/ralph-lauren-03.jpg" loading="lazy" alt="Ralph Lauren campagnebeeld: stel in geruite kleding in een berglandschap" class="pp-img" /></div>
+    <div class="pp-services">
+      <div class="pp-label pp-label-sans">Provided services</div>
+      <div class="pp-text">Exploration</div>
+      <div class="pp-text">Web Design &amp; Development</div>
+      <div class="pp-text">Web GL</div>
+      <div class="pp-text">Creative &amp; Art direction</div>
+    </div>
+    <div class="pp-statement"><div class="pp-statement-first">A wardrobe is only part</div><div>of the story.</div></div>
+    <div class="pp-media">
+      <div class="pp-media-col-left">
+        <div class="pp-label">RALPHLAUREN-02</div>
+        <div class="pp-frame pp-frame-one"><img class="pp-img" src={ph} alt="Ralph Lauren campagnebeeld: vrouw in bruine leren jas op een houten hek" data-parallax-img loading="lazy" /></div>
+      </div>
+      <div>
+        <div class="pp-label">RALPHLAUREN-03</div>
+        <div class="pp-frame pp-frame-two"><img class="pp-img" src={ph} alt="Ralph Lauren campagnebeeld: vrouw met bruine hoed te paard" data-parallax-img loading="lazy" /></div>
+      </div>
+    </div>
+    <div class="pp-wide">
+      <div class="pp-frame pp-frame-wide"><img class="pp-img" src={ph} alt="Ralph Lauren 04" data-parallax-img loading="lazy" /></div>
+      <div class="pp-label pp-label-after">RALPHLAUREN-04</div>
+    </div>
+    <Footer />
+  </div>
+</Base>
