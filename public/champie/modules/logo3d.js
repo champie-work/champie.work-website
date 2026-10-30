@@ -108,6 +108,7 @@ export function initLogo3d({ anchor }) {
   white.position.z = 0.3; white.renderOrder = 2; eye.add(white);
   const pupil = new THREE.Mesh(new THREE.ShapeGeometry(shapesOf(2), 48), Object.assign(mat(C.bodyColor, -2), insideFace));
   pupil.position.z = 0.6; pupil.renderOrder = 3; eye.add(pupil);
+  pupil.position.y = -2; // iets omhoog: dekt de bovenrand van het oogwit af (anders een dun licht lijntje)
 
   // Lichte randlijnen langs de buitenomtrek
   const edgeMat = new THREE.LineBasicMaterial({ color: new THREE.Color(C.edgeColor), transparent: true, opacity: 0 });
