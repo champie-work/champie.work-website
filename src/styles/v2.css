@@ -34,16 +34,17 @@ p { margin: 0; }
 .cmenu_nav .nav_link { font-size: 20px; }
 
 /* ===== Hero ===== */
-.hero { position: relative; display: flex; flex-direction: column; height: max(100vh, calc(var(--logo-top) + var(--logo-h) + 119 * var(--u))); padding: calc(24 * var(--u)) calc(24 * var(--u)) calc(94 * var(--u)); background: var(--yellow); color: var(--dark); overflow: hidden; }
+.hero { position: relative; display: flex; flex-direction: column; height: max(100vh, calc(var(--logo-top) + 200px + 119 * var(--u))); padding: calc(24 * var(--u)) calc(24 * var(--u)) calc(94 * var(--u)); background: var(--yellow); color: var(--dark); overflow: hidden; }
 .hero_wordmark { margin: 0; line-height: 0; }
 .hero_wordmark svg { display: block; width: 100%; height: auto; }
 .hero_row { display: flex; justify-content: space-between; align-items: flex-start; margin-top: calc(-2.9 * var(--u)); }
 .hero_contact { display: flex; gap: calc(30 * var(--u)); }
 .status { display: flex; align-items: center; gap: calc(10 * var(--u)); font-weight: 600; font-size: calc(20 * var(--u)); line-height: 1.3; text-decoration: none; }
 .status_dot { width: calc(14 * var(--u)); height: calc(14 * var(--u)); background: currentColor; }
-/* Logo-vak: direct onder het woordmerk (nav-rij), even groot als in Figma t.o.v. de breedte (447 van 1440).
-   De hero wordt zo hoog als nodig: logo eindigt altijd 119 boven de onderkant (Figma: 334 tot 781 bij 1440x900). */
-.hero { --logo-top: calc(27 * var(--u) + (100vw - 48 * var(--u)) * 307 / 1392); --logo-h: calc(100vw * 447 / 1440); }
+/* Logo-vak: direct onder het woordmerk (nav-rij). Zo groot als in Figma t.o.v. de breedte (447 van 1440),
+   maar nooit groter dan er ruimte is: de hero past altijd in beeld; het logo mag tot 24 boven de onderkant
+   (klok en tekst staan links en rechts ervan). Bij 1440x900 precies Figma: 334 tot 781. */
+.hero { --logo-top: calc(27 * var(--u) + (100vw - 48 * var(--u)) * 307 / 1392); --logo-h: min(calc(100vw * 447 / 1440), calc(100vh - var(--logo-top) - 24 * var(--u))); }
 .hero_logo3d { position: absolute; left: 0; right: 0; top: var(--logo-top); height: var(--logo-h); pointer-events: none; }
 .hero_bottom { display: flex; justify-content: space-between; align-items: flex-start; margin-top: auto; }
 
