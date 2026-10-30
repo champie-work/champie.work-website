@@ -14,3 +14,5 @@ export const socials = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/semvanderwal' },
   { label: 'Instagram', href: 'https://www.instagram.com/champie.work' },
 ];
+
+export const services = ['Creative & Art direction', 'Web Design & Development', 'Webflow Development', 'Branding', 'Digital Design'];

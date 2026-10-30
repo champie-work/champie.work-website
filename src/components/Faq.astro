@@ -1,0 +1,15 @@
+---
+// FAQ-lijst (uitklappen; de eerste staat open). Teksten: src/data/faq.js
+import { faq } from '../data/faq.js';
+const { class: cls } = Astro.props;
+const chevron = 'M10.59 0L6 4.58L1.41 0L0 1.41L6 7.41L12 1.41L10.59 0Z';
+---
+<div class:list={['faq_list', cls]}>
+  {faq.map((f, i) => (
+    <details name="faq" class="faq_item" open={i === 0}>
+      <summary class="faq_q">{f.q}<svg viewBox="0 0 12 8" aria-hidden="true"><path fill="currentColor" d={chevron} /></svg></summary>
+      <p class="faq_a">{f.a}</p>
+    </details>
+  ))}
+  <a href="/start-a-project#faq" class="label link_right faq_more">View all FAQ</a>
+</div>

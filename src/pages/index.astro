@@ -4,7 +4,11 @@ import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
 import Wordmark from '../components/Wordmark.astro';
 import Nav from '../components/Nav.astro';
-import { email } from '../data/site.js';
+import { email, services } from '../data/site.js';
+import Eye from '../components/Eye.astro';
+import Faq from '../components/Faq.astro';
+import Services from '../components/Services.astro';
+import Studio from '../components/Studio.astro';
 
 const projects = [
   { title: 'Ralph Lauren', hover: 'A Study in Timeless Style', meta: 'Exploration + Case Study', href: '/project/ralph-lauren',
@@ -13,27 +17,12 @@ const projects = [
     img: '/img/home-zodiac.webp', alt: 'Zodiac Super Sea Wolf horloge op blauwe achtergrond', ratio: '684 / 860', bg: '#0f7cff' },
 ];
 
-const services = ['Creative & Art direction', 'Web Design & Development', 'Webflow Development', 'Branding', 'Digital Design'];
-
 // Insights: nog voorbeelden. Later via Keystatic. color = vlak zolang er geen beeld is.
 const insights = [
   { title: 'Creation of Champie', author: 'Sem van der Wal', time: '5 min', ratio: '684 / 640', color: '#ffc82e' },
   { title: 'Creation of Champie', author: 'Sem van der Wal', time: '5 min', ratio: '684 / 420', color: '#131416' },
 ];
 
-// FAQ: de eerste staat open. Antwoorden 2 t/m 5 zijn een CONCEPT (stond niet in Figma) — graag nalezen.
-const faq = [
-  { q: 'Who do you usually work with?', a: 'I work with founders, growing businesses and established brands looking to build, improve or rethink their visual identity and digital presence. Projects vary in size, but the common ground is an ambition to create something distinctive.' },
-  { q: 'Who will be working on my project?', a: 'Me. Champie is a one-person studio, so you work directly with the designer from the first call to the final file. When a project needs extra hands, I bring in people I trust and tell you upfront.' },
-  { q: 'What services do you offer?', a: 'Creative and art direction, branding, digital design and web design and development, including Webflow. Most projects combine a few of these.' },
-  { q: 'Do I need a complete rebrand or just a website?', a: 'It depends on where you are. If your brand still fits, a new website can be enough. If it no longer reflects who you are, it pays to start with the identity. We figure that out together in the first call.' },
-  { q: 'How long do projects usually take?', a: 'A website or identity usually takes between four and ten weeks, depending on the scope. You get a clear planning before we start.' },
-];
-
-const arrowUR = 'M0.630664 0H8.625V7.99434H6.84848V3.02896L1.26133 8.625L0 7.36367L5.59604 1.77652H0.630664V0Z';
-const chevron = 'M10.59 0L6 4.58L1.41 0L0 1.41L6 7.41L12 1.41L10.59 0Z';
-const eyeWhite = 'M50.2317 0.0344637H15.2638L0 0.0108833C1.20804 7.31719 5.95859 13.6694 11.7521 18.0717C28.028 30.4115 54.2132 30.377 70.4166 17.9356C76.1593 13.5061 80.7648 7.29542 82 0L50.2299 0.0344637H50.2317Z';
-const eyePupil = 'M49.1448 4.53651C49.1448 13.956 41.5302 21.5942 32.1379 21.5942C22.7457 21.5942 15.1328 13.956 15.1328 4.53651C15.1328 2.96388 15.3468 1.44385 15.7459 0H48.5299C48.929 1.44385 49.1448 2.96206 49.1448 4.53651Z';
 ---
 <Base>
   <header id="top" data-hero class="hero">
@@ -56,7 +45,7 @@ const eyePupil = 'M49.1448 4.53651C49.1448 13.956 41.5302 21.5942 32.1379 21.594
   </header>
 
   <section class="intro">
-    <p class="intro_text">Independent design<svg aria-hidden="true" viewBox="0 0 82 28" data-eye class="intro_eye"><path fill="#FBFAF7" d={eyeWhite} /><path fill="#0E0E10" d={eyePupil} /></svg>studio based in Enschede. Working across branding, digital and web to help ambitious founders and brands stand out.</p>
+    <p class="intro_text">Independent design<Eye class="intro_eye" />studio based in Enschede. Working across branding, digital and web to help ambitious founders and brands stand out.</p>
   </section>
 
   <section id="projects" class="projects">
@@ -88,17 +77,12 @@ const eyePupil = 'M49.1448 4.53651C49.1448 13.956 41.5302 21.5942 32.1379 21.594
     <h2 class="services_heading">From identity to<br />digital experience.</h2>
     <div class="grid services_row">
       <div class="services_side">
-        <svg aria-hidden="true" viewBox="0 0 82 28" data-eye="flip" class="services_eye"><path fill="#FBFAF7" d={eyeWhite} /><path fill="#0E0E10" d={eyePupil} /></svg>
+        <Eye class="services_eye" flip />
         <div class="label is-muted services_count">{services.length}</div>
       </div>
       <div>
         <div class="label">Services</div>
-        <div class="services_list">
-          {services.map((s) => (
-            <div data-service-row class="service_row">{s}<div data-row-icon class="service_icon"><svg viewBox="0 0 9 9" aria-hidden="true"><path fill="currentColor" d={arrowUR} /></svg></div></div>
-          ))}
-        </div>
-        <a href="/process" class="label link_right">View the process</a>
+        <Services />
       </div>
     </div>
   </section>
@@ -126,15 +110,7 @@ const eyePupil = 'M49.1448 4.53651C49.1448 13.956 41.5302 21.5942 32.1379 21.594
     <p class="mono cta_sub">Let's talk about your idea, what you're aiming for<br />and how good design can help get you there.</p>
     <div class="faq">
       <div class="label">FAQ</div>
-      <div>
-        {faq.map((f, i) => (
-          <details name="faq" class="faq_item" open={i === 0}>
-            <summary class="faq_q">{f.q}<svg viewBox="0 0 12 8" aria-hidden="true"><path fill="currentColor" d={chevron} /></svg></summary>
-            <p class="faq_a">{f.a}</p>
-          </details>
-        ))}
-        <a href="/start-a-project#faq" class="label link_right">View all FAQ</a>
-      </div>
+      <Faq />
     </div>
     <a href={`mailto:${email}`} class="cta_call">
       <img class="cta_photo" src="/img/sem-van-der-wal.webp" alt="Portret van Sem van der Wal op gele achtergrond" loading="lazy" />
@@ -145,10 +121,7 @@ const eyePupil = 'M49.1448 4.53651C49.1448 13.956 41.5302 21.5942 32.1379 21.594
     </a>
   </section>
 
-  <section class="studio">
-    <img class="studio_bg" src="/img/home-studio.webp" alt="" loading="lazy" />
-    <p class="mono studio_text">For brands with something to say.<br />Design that makes them heard.<br /><br /><br /><br /><a href={`mailto:${email}`}>{email}</a></p>
-  </section>
+  <Studio />
 
   <Footer />
 </Base>
