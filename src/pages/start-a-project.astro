@@ -1,0 +1,31 @@
+---
+// Start a project (Figma "v2 web" > Start a project page, 567:843). Opmaak: src/styles/v2.css (/* Start a project */).
+// De agenda is nog een plaatje uit Figma; met een Cal.com-link wordt het een echte boekingsagenda.
+import Base from '../layouts/Base.astro';
+import SubHeader from '../components/SubHeader.astro';
+import Faq from '../components/Faq.astro';
+import Studio from '../components/Studio.astro';
+import Footer from '../components/Footer.astro';
+import { email } from '../data/site.js';
+---
+<Base title="Start a project | champie.work" menu={false}>
+  <main class="page start">
+    <SubHeader title="Start a project" />
+    <h1 class="big_center start_title">Let's start with a conversation.</h1>
+    <p class="body20 start_intro">Book a 30-minute call to discuss your idea, your goals and what you're looking to create. No commitments, just a good conversation to get things started.</p>
+    <a class="start_cal" href={`mailto:${email}?subject=Intro%20call`}>
+      <img src="/img/start-cal.webp" alt="Agenda om een intro-call van 30 minuten met Sem in te plannen" />
+    </a>
+
+    <div id="faq" class="grid start_faq">
+      <div>
+        <div class="label">FAQ</div>
+        <h2>A few things<br />worth knowing</h2>
+        <p class="mono">Let's talk about your idea, what you're aiming for<br />and how good design can help get you there.</p>
+      </div>
+      <Faq />
+    </div>
+  </main>
+  <Studio />
+  <Footer />
+</Base>

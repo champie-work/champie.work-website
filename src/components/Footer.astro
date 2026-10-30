@@ -1,30 +1,31 @@
 ---
-// Gele footer, op elke pagina gelijk.
+// Gele footer (Figma v2 web, Frame 250). Op elke pagina gelijk.
+// [data-logo3d-footer] = de plek waar het 3D-logo naartoe vliegt.
+import { nav, email, socials } from '../data/site.js';
+const links = nav.flat();
+const arrowUR = 'M10.1456 0.146884C10.192 0.100324 10.2472 0.0633836 10.3079 0.0381788C10.3687 0.012974 10.4338 0 10.4996 0C10.5653 0 10.6304 0.012974 10.6912 0.0381788C10.7519 0.0633836 10.8071 0.100324 10.8535 0.146884L14.8534 4.14663C14.9473 4.24051 15 4.36784 15 4.50061C15 4.63337 14.9473 4.7607 14.8534 4.85458C14.7595 4.94846 14.6322 5.00121 14.4994 5.00121C14.3666 5.00121 14.2393 4.94846 14.1454 4.85458L10.9995 1.70778V11.5002C10.9995 12.1632 10.7362 12.799 10.2673 13.2678C9.79851 13.7366 9.16265 14 8.49964 14H0.499979C0.367376 14 0.240204 13.9473 0.14644 13.8536C0.0526762 13.7598 0 13.6326 0 13.5C0 13.3674 0.0526762 13.2403 0.14644 13.1465C0.240204 13.0527 0.367376 13.0001 0.499979 13.0001H8.49964C8.89745 13.0001 9.27896 12.842 9.56026 12.5608C9.84155 12.2795 9.99958 11.898 9.99958 11.5002V1.70778L6.85371 4.85458C6.80723 4.90107 6.75204 4.93794 6.6913 4.9631C6.63056 4.98826 6.56547 5.00121 6.49973 5.00121C6.43399 5.00121 6.36889 4.98826 6.30815 4.9631C6.24741 4.93794 6.19223 4.90107 6.14574 4.85458C6.09926 4.8081 6.06238 4.75291 6.03722 4.69218C6.01206 4.63144 5.99912 4.56635 5.99912 4.50061C5.99912 4.43487 6.01206 4.36977 6.03722 4.30903C6.06238 4.2483 6.09926 4.19311 6.14574 4.14663L10.1456 0.146884Z';
+const arrowUp = 'M4.50065 14.001C4.36804 14.001 4.24086 13.9483 4.1471 13.8545C4.05333 13.7608 4.00065 13.6336 4.00065 13.501L4.00065 1.70798L0.85465 4.85498C0.760763 4.94886 0.633425 5.00161 0.50065 5.00161C0.367874 5.00161 0.240536 4.94886 0.14665 4.85498C0.0527631 4.76109 0 4.63375 0 4.50098C0 4.3682 0.0527631 4.24086 0.146649 4.14698L4.14665 0.146977C4.19309 0.100414 4.24827 0.0634713 4.30902 0.0382647C4.36976 0.0130581 4.43488 0 4.50065 0C4.56642 0 4.63154 0.0130581 4.69228 0.0382647C4.75303 0.0634712 4.8082 0.100414 4.85465 0.146977L8.85465 4.14698C8.94854 4.24086 9.00128 4.3682 9.00128 4.50098C9.00128 4.63375 8.94854 4.76109 8.85465 4.85498C8.76076 4.94886 8.63343 5.00161 8.50065 5.00161C8.36787 5.00161 8.24054 4.94886 8.14665 4.85498L5.00065 1.70798L5.00065 13.501C5.00065 13.6336 4.94797 13.7608 4.8542 13.8545C4.76044 13.9483 4.63326 14.001 4.50065 14.001Z';
 ---
-<section data-footer class="footer">
-  <div data-parallax-footer class="footer_inner">
-    <div class="footer_row">
-      <div class="footer_contact">
-        <div class="hero_status"><div data-status-dot class="hero_status_dot"></div><div>Open for work</div></div>
-        <a href="mailto:hello@champie.work" class="link">hello@champie.work</a>
-      </div>
-      <div class="footer_nav">
-        <a data-nav-link href="/#projects" class="hero_nav_link">Projects</a>
-        <a data-nav-link href="/#about" class="hero_nav_link">About</a>
-        <a data-nav-link href="/#services" class="hero_nav_link">Services</a>
-        <a data-nav-link href="/#process" class="hero_nav_link">Process</a>
+<footer data-footer class="ft">
+  <div data-parallax-footer class="ft_inner">
+    <div class="ft_col">
+      <div class="ft_label">Navigation</div>
+      <div class="ft_links">
+        {links.map((l) => <a href={l.href} class="ft_link">{l.label}</a>)}
       </div>
     </div>
-    <div aria-hidden="true" data-logo3d-footer class="footer_logo"></div>
-    <div class="footer_row">
-      <div class="hero_location">
-        <div data-clock="enschede" class="hero_mono">--:--:--</div>
-        <div data-date="enschede" class="hero_mono">Monday, Oct 19</div>
-      </div>
-      <div class="footer_socials">
-        <a href="https://www.instagram.com/champie.work" target="_blank" class="footer_social"><div class="footer_social_label">Instagram</div><div class="footer_social_handle">@champie.work</div></a>
-        <a href="https://www.linkedin.com/in/semvanderwal" target="_blank" class="footer_social"><div class="footer_social_label">LinkedIn</div><div class="footer_social_handle">/semvanderwal</div></a>
-      </div>
+    <div class="ft_col ft_col_right">
+      <div class="ft_label">Studio</div>
+      <div class="ft_copy">©{new Date().getFullYear()} Champie</div>
+      <div class="ft_text ft_based">Based in Enschede, The Netherlands</div>
+      <div class="ft_text ft_status"><div data-status-dot class="ft_dot"></div>Open for work</div>
+      <a href={`mailto:${email}`} class="ft_text ft_email">{email}</a>
+      <div class="ft_label ft_socials_label">Socials</div>
+      {socials.map((s) => (
+        <a href={s.href} target="_blank" rel="noopener" class="ft_social">{s.label}<svg viewBox="0 0 15 14" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d={arrowUR} /></svg></a>
+      ))}
+      <a href="#top" class="ft_social ft_top" data-back-to-top>Back to top<svg viewBox="0 0 9 14" class="ft_top_icon" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d={arrowUp} /></svg></a>
+      <div aria-hidden="true" data-logo3d-footer class="ft_logo"></div>
     </div>
   </div>
-</section>
+</footer>

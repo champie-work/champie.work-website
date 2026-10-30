@@ -1,7 +1,9 @@
 ---
-// Basis voor elke pagina: fonts, stijlen en de champie-scripts (public/champie).
+// Basis voor elke pagina: fonts, stijlen, menubalk en de champie-scripts (public/champie).
 import '../styles/site.css';
-const { title = 'champie.work' } = Astro.props;
+import '../styles/v2.css';
+import Menu from '../components/Menu.astro';
+const { title = 'champie.work', menu = true } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -11,11 +13,12 @@ const { title = 'champie.work' } = Astro.props;
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=Geist+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&family=Geist+Mono:wght@400;500;600&display=swap" />
     <link rel="stylesheet" href="/champie/champie.css" />
     <script type="module" src="/champie/main.js" is:inline></script>
   </head>
   <body class="body">
     <slot />
+    {menu && <Menu />}
   </body>
 </html>

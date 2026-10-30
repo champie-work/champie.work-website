@@ -1,0 +1,12 @@
+---
+// Drie kolommen links (Projects/Services · About/Process/FAQ · Let's talk). Hero en menubalk gebruiken dit.
+import { nav } from '../data/site.js';
+const { class: cls, dark = false } = Astro.props;
+---
+<nav class:list={['nav', cls]} aria-label="Hoofdmenu" data-nav-dark={dark ? '' : undefined}>
+  {nav.map((col) => (
+    <div class="nav_col">
+      {col.map((l) => <a data-nav-link href={l.href} class="nav_link">{l.label}</a>)}
+    </div>
+  ))}
+</nav>

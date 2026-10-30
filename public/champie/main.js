@@ -13,8 +13,9 @@ import { initProjectPage } from './modules/project-page.js';
 initSmoothScroll();
 initParallax();
 
-// Menu + 3D-logo op elke pagina; zonder [data-logo3d] (projectpagina) staat het logo meteen in het menu
-initLogo3d({ anchor: document.querySelector('[data-logo3d]'), trigger: document.querySelector('[data-logo3d-trigger]'), menu: initMenu() });
+// Menubalk (popt op na de header) en 3D-logo (in de header en in de footer)
+initMenu();
+initLogo3d({ anchor: document.querySelector('[data-logo3d]') });
 
 initProjectHover();
 initEyes();

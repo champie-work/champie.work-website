@@ -1,0 +1,11 @@
+---
+// Dienstenlijst met gele pijl bij hover + "View the process". Teksten: src/data/site.js
+import { services } from '../data/site.js';
+const arrowUR = 'M0.630664 0H8.625V7.99434H6.84848V3.02896L1.26133 8.625L0 7.36367L5.59604 1.77652H0.630664V0Z';
+---
+<div class="services_list">
+  {services.map((s) => (
+    <div data-service-row class="service_row">{s}<div data-row-icon class="service_icon"><svg viewBox="0 0 9 9" aria-hidden="true"><path fill="currentColor" d={arrowUR} /></svg></div></div>
+  ))}
+</div>
+<a href="/process" class="label link_right services_more">View the process</a>

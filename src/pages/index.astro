@@ -1,120 +1,127 @@
 ---
+// Homepage V2 (Figma "v2 web" > Homepage). Opmaak: src/styles/v2.css.
 import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
+import Wordmark from '../components/Wordmark.astro';
+import Nav from '../components/Nav.astro';
+import { email, services } from '../data/site.js';
+import Eye from '../components/Eye.astro';
+import Faq from '../components/Faq.astro';
+import Services from '../components/Services.astro';
+import Studio from '../components/Studio.astro';
 
-// Tijdelijk: deze 3 foto's komen nog van Webflow. Later in public/img zetten en hier aanpassen.
-const wf = 'https://cdn.prod.website-files.com/6ad1083b76cf28f6ee90f556/';
-const img = {
-  ralph: wf + '6ad126f46db79f796f8b98bf_project-ralph-lauren.jpg-p-1080.webp',
-  zodiac: wf + '6ad126fe27109d1054cc4ebf_project-color-has-character.jpg-p-1080.webp',
-  sem: wf + '6ad12c9c4d47bc07fc4be2f1_sem-van-der-wal.jpg.webp',
-};
+const projects = [
+  { title: 'Ralph Lauren', hover: 'A Study in Timeless Style', meta: 'Exploration + Case Study', href: '/project/ralph-lauren',
+    img: '/img/home-ralph-lauren.webp', alt: 'Ralph Lauren campagnebeeld: man met bruine hoed en leren jas', ratio: '684 / 750', bg: '#121214' },
+  { title: 'Zodiac', hover: 'Color has Character', meta: 'Exploration + Case Study', href: null,
+    img: '/img/home-zodiac.webp', alt: 'Zodiac Super Sea Wolf horloge op blauwe achtergrond', ratio: '684 / 860', bg: '#0f7cff' },
+];
 
-const services = ['Creative & Art direction', 'Web Design & Development', 'Webflow Development', 'Branding', 'Digital Design'];
+// Insights: nog voorbeelden. Later via Keystatic. color = vlak zolang er geen beeld is.
+const insights = [
+  { title: 'Creation of Champie', author: 'Sem van der Wal', time: '5 min', ratio: '684 / 640', color: '#ffc82e' },
+  { title: 'Creation of Champie', author: 'Sem van der Wal', time: '5 min', ratio: '684 / 420', color: '#131416' },
+];
 
-// Insights: { title, image, time }. Leeg = sectie verborgen. (Later via Keystatic.)
-const insights = [];
-
-const arrowUpRight = 'M0.710938 0H9.71094V9H7.71094V3.41L1.42094 9.71L0.000938416 8.29L6.30094 2H0.710938V0Z';
 ---
 <Base>
-  <div data-hero class="hero">
-    <div data-logo3d class="hero_logo3d"></div>
-    <h1 data-logo3d-trigger data-parallax-hero class="hero_wordmark">CHAMPIE</h1>
-    <div data-nav-dark data-parallax-hero class="hero_info_row">
+  <header id="top" data-hero class="hero">
+    <h1 data-parallax-hero class="hero_wordmark"><Wordmark /></h1>
+    <div data-parallax-hero class="hero_row">
       <div class="hero_contact">
-        <div class="hero_status is-bar"><div data-status-dot aria-hidden="true" class="hero_status_dot is-bar"></div><div>Open for work</div></div>
-        <a href="mailto:hello@champie.work" class="hero_nav_link is-bar">hello@champie.work</a>
+        <div class="status"><div data-status-dot aria-hidden="true" class="status_dot"></div>Open for work</div>
+        <a data-nav-link href={`mailto:${email}`} class="status">{email}</a>
       </div>
-      <div class="hero_nav"><div class="hero_nav_inner">
-        <a data-nav-link href="#projects" class="hero_nav_link is-bar">Projects</a>
-        <a data-nav-link href="#services" class="hero_nav_link is-bar">Services</a>
-        <a data-nav-link href="#about" class="hero_nav_link is-bar">About</a>
-        <a data-nav-link href="#process" class="hero_nav_link is-bar">Process</a>
-      </div></div>
+      <Nav class="hero_nav" />
     </div>
-    <div data-parallax-hero class="hero_bottom_row">
-      <div class="hero_location">
-        <div data-clock="enschede" class="hero_mono">--:--:--</div>
-        <div data-date="enschede" class="hero_mono">Monday, Oct 19</div>
+    <div data-logo3d class="hero_logo3d"></div>
+    <div data-parallax-hero class="hero_bottom">
+      <div class="mono">
+        <div data-clock="enschede">--:--:--</div>
+        <div data-date="enschede">Monday, Oct 19</div>
       </div>
-      <a href="#projects" class="hero_discover_link">
-        <span class="hero_mono">Discover</span>
-        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 7 8" height="8" width="7" class="hero_icon_discover"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M3.5 0C3.63258 0 3.75974 0.0526726 3.85349 0.14643C3.94724 0.240188 3.99991 0.367351 3.99991 0.499944V6.2923L6.14552 4.14554C6.192 4.09905 6.24718 4.06218 6.30791 4.03703C6.36864 4.01187 6.43373 3.99892 6.49946 3.99892C6.56519 3.99892 6.63028 4.01187 6.69101 4.03703C6.75174 4.06218 6.80692 4.09905 6.85339 4.14554C6.89987 4.19202 6.93674 4.2472 6.9619 4.30794C6.98705 4.36867 7 4.43376 7 4.4995C7 4.56523 6.98705 4.63033 6.9619 4.69106C6.93674 4.75179 6.89987 4.80698 6.85339 4.85346L3.85394 7.85312C3.8075 7.89968 3.75233 7.93662 3.6916 7.96182C3.63086 7.98703 3.56576 8 3.5 8C3.43424 8 3.36914 7.98703 3.3084 7.96182C3.24767 7.93662 3.1925 7.89968 3.14606 7.85312L0.146605 4.85346C0.100126 4.80698 0.063256 4.75179 0.0381015 4.69106C0.0129469 4.63033 0 4.56523 0 4.4995C0 4.43376 0.0129469 4.36867 0.0381015 4.30794C0.063256 4.2472 0.100126 4.19202 0.146605 4.14554C0.240475 4.05166 0.36779 3.99892 0.500542 3.99892C0.566274 3.99892 0.631362 4.01187 0.692091 4.03703C0.752819 4.06218 0.807998 4.09905 0.854478 4.14554L3.00009 6.2923V0.499944C3.00009 0.367351 3.05276 0.240188 3.14651 0.14643C3.24026 0.0526726 3.36742 0 3.5 0Z"></path></svg>
-      </a>
+      <p class="mono">For brands with something to say.<br />Design that makes them heard.</p>
     </div>
-  </div>
+  </header>
 
-  <section data-theme="dark" class="intro">
-    <p class="intro_text">Independent design<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 82 28" height="28" width="82" data-eye class="intro_eye"><path fill="#FBFAF7" d="M50.2317 0.0344637H15.2638L0 0.0108833C1.20804 7.31719 5.95859 13.6694 11.7521 18.0717C28.028 30.4115 54.2132 30.377 70.4166 17.9356C76.1593 13.5061 80.7648 7.29542 82 0L50.2299 0.0344637H50.2317Z"></path><path fill="#0E0E10" d="M49.1448 4.53651C49.1448 13.956 41.5302 21.5942 32.1379 21.5942C22.7457 21.5942 15.1328 13.956 15.1328 4.53651C15.1328 2.96388 15.3468 1.44385 15.7459 0H48.5299C48.929 1.44385 49.1448 2.96206 49.1448 4.53651Z"></path></svg>studio based in Enschede. Working across branding, digital and web to help ambitious founders and brands stand out.</p>
+  <section class="intro">
+    <p class="intro_text">Independent design<Eye class="intro_eye" />studio based in Enschede. Working across branding, digital and web to help ambitious founders and brands stand out.</p>
   </section>
 
-  <section id="projects" data-theme="dark" class="projects">
-    <div class="projects_labels">
-      <div class="projects_label_left"><div data-label class="projects_label">Projects</div><div class="projects_label is-muted">4</div></div>
-      <div class="projects_label projects_label_right">Independent design studio based in Enschede</div>
+  <section id="projects" class="projects">
+    <div class="grid label_row">
+      <div class="label_split"><div class="label">Projects</div><div class="label is-muted">{projects.length}</div></div>
+      <p class="label label_right">Selected explorations<br />and projects.</p>
     </div>
-    <div class="projects_grid">
-      <div data-project class="project_card">
-        <a href="/project/ralph-lauren" class="project_link">
-          <div data-project-media class="project_media project_media_ralph"><img class="project_img" src={img.ralph} alt="Ralph Lauren campagnebeeld: man met bruine hoed en leren jas" data-parallax-img loading="lazy" /></div>
-          <div class="project_caption"><div data-hover-title="A Study in Timeless Style" data-project-title class="project_title">Ralph Lauren</div><div class="project_meta">Exploration + Case Study</div></div>
-        </a>
-      </div>
-      <div data-project class="project_card">
-        <div data-project-media class="project_media project_media_zodiac"><img class="project_img" src={img.zodiac} alt="Zodiac Super Sea Wolf horloge op blauwe achtergrond" data-parallax-img loading="lazy" /></div>
-        <div class="project_caption">
-          <div class="project_title_wrap">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 15" height="15" width="14" data-project-arrow class="project_return"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M13.854 10.1454C13.9006 10.1918 13.9375 10.247 13.9627 10.3077C13.9879 10.3685 14.0009 10.4336 14.0009 10.4994C14.0009 10.5651 13.9879 10.6303 13.9627 10.691C13.9375 10.7517 13.9006 10.8069 13.854 10.8534L9.854 14.8534C9.76011 14.9473 9.63278 15 9.5 15C9.36722 15 9.23989 14.9473 9.146 14.8534C9.05211 14.7595 8.99937 14.6321 8.99937 14.4994C8.99937 14.3666 9.05211 14.2393 9.146 14.1454L12.293 10.9994L2.5 10.9994C1.83696 10.9994 1.20107 10.736 0.732233 10.2671C0.263392 9.79829 0 9.16241 0 8.49937L0 0.499369C0 0.36676 0.0526778 0.239583 0.146446 0.145815C0.240214 0.0520468 0.367391 0 0.499999 0C0.632608 0 0.759785 0.0520467 0.853553 0.145815C0.947321 0.239583 0.999999 0.36676 0.999999 0.499369L1 8.49937C1 8.89719 1.15804 9.27872 1.43934 9.56003C1.72064 9.84133 2.10218 9.99937 2.5 9.99937L12.293 9.99937L9.146 6.85337C9.05211 6.75948 8.99937 6.63214 8.99937 6.49937C8.99937 6.36659 9.05211 6.23925 9.146 6.14537C9.23989 6.05148 9.36722 5.99874 9.5 5.99874C9.63277 5.99874 9.76011 6.05148 9.854 6.14537L13.854 10.1454Z"></path></svg>
-            <div data-project-title data-hover-title="Color has Character" class="project_title">Zodiac</div>
-          </div>
-          <div class="project_meta">Exploration + Case Study</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="services" data-theme="dark" class="services">
-    <h2 class="services_heading">From a first impression
-to something that lasts.</h2>
-    <div class="services_row">
-      <div class="services_side">
-        <div class="services_photo"><img src={img.sem} loading="lazy" alt="Portret van Sem van der Wal op gele achtergrond" class="services_photo_img" /></div>
-        <a href="mailto:hello@champie.work" class="services_book">
-          <div class="services_book_text">
-            <div class="services_book_mono">Schedule a call</div>
-            <div class="services_book_line"><div class="services_book_mono">with</div><div class="services_book_name">Sem van der Wal</div></div>
-          </div>
-          <div class="services_book_icon"><svg viewBox="0 0 10 10" width="10" height="10" fill="none" aria-hidden="true"><path fill="currentColor" d={arrowUpRight}></path></svg></div>
-        </a>
-      </div>
-      <div class="services_list_col">
-        <div class="services_head"><div class="section_label is-muted">Services</div><div class="services_count">{services.length}</div></div>
-        <div class="service_list">
-          {services.map((s) => (
-            <div data-service-row class="service_row"><div>{s}</div><div data-row-icon class="service_row_icon"><svg viewBox="0 0 10 10" width="6" height="6" fill="none" aria-hidden="true"><path fill="currentColor" d={arrowUpRight}></path></svg></div></div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {insights.length > 0 && (
-    <section data-theme="dark" class="insights">
-      <div data-label class="section_label">Insights</div>
-      <div class="insights_grid">
-        {insights.map((i) => (
-          <div data-insight>
-            <div class="insight_media"><img src={i.image} loading="lazy" alt={i.title} class="insight_img" /></div>
-            <div class="insight_row">
-              <div class="insight_name"><svg viewBox="0 0 15 14" width="15" height="14" fill="none" aria-hidden="true" data-insight-arrow><path fill="currentColor" d="M0 0H2V8H11.2L8.3 5.1L9.7 3.7L15 9L9.7 14.3L8.3 12.9L11.2 10H0V0Z"></path></svg><div class="insight_title">{i.title}</div></div>
-              <div data-insight-time class="insight_time"><svg viewBox="0 0 8 10" width="8" height="10" fill="none" aria-hidden="true"><path fill="currentColor" d="M0 0H8V2L5.2 5L8 8V10H0V8L2.8 5L0 2V0Z"></path></svg><div>{i.time}</div></div>
+    <div class="grid projects_grid">
+      {projects.map((p) => {
+        const Tag = p.href ? 'a' : 'div';
+        return (
+          <Tag data-project class="project" href={p.href}>
+            <div data-project-media class="project_media" style={`aspect-ratio:${p.ratio};background:${p.bg}`}>
+              <img class="cover" src={p.img} alt={p.alt} data-parallax-img loading="lazy" />
             </div>
-          </div>
-        ))}
+            <div class="project_caption">
+              <div data-project-title data-hover-title={p.hover} class="project_title">{p.title}</div>
+              <div class="project_meta">{p.meta}</div>
+            </div>
+          </Tag>
+        );
+      })}
+    </div>
+    <!-- Pijl voor de hovertitel: project-hover.js kopieert hem in elke kaart -->
+    <div hidden><svg data-project-arrow class="project_arrow" viewBox="0 0 14 15" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M13.854 10.146a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L12.293 11H2.5A2.5 2.5 0 0 1 0 8.5v-8a.5.5 0 0 1 1 0v8A1.5 1.5 0 0 0 2.5 10h9.793L9.146 6.854a.5.5 0 1 1 .708-.708l4 4Z" /></svg></div>
+  </section>
+
+  <section id="services" class="services">
+    <h2 class="services_heading">From identity to<br />digital experience.</h2>
+    <div class="grid services_row">
+      <div class="services_side">
+        <Eye class="services_eye" flip />
+        <div class="label is-muted services_count">{services.length}</div>
       </div>
-    </section>
-  )}
+      <div>
+        <div class="label">Services</div>
+        <Services />
+      </div>
+    </div>
+  </section>
+
+  <section class="insights">
+    <div class="label_split insights_labels"><div class="label label_16">Insights</div><div class="label is-muted">{insights.length}</div></div>
+    <div class="grid insights_grid">
+      {insights.map((i) => (
+        <div data-insight class="insight">
+          <div class="insight_media" style={`aspect-ratio:${i.ratio};background:${i.color}`}></div>
+          <div class="insight_row">
+            <div>
+              <div class="insight_title">{i.title}</div>
+              <div class="insight_author">Author: {i.author}</div>
+            </div>
+            <div data-insight-time class="insight_time"><svg viewBox="0 0 7 11" aria-hidden="true"><path fill="currentColor" d="M0 0V3.3L2.33333 5.5L0 7.7V11H7V7.7L4.66667 5.5L7 3.3V0H0Z" /></svg>{i.time}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section id="faq" class="cta">
+    <h2 class="cta_heading">Have something<br />worth building?</h2>
+    <p class="mono cta_sub">Let's talk about your idea, what you're aiming for<br />and how good design can help get you there.</p>
+    <div class="faq">
+      <div class="label">FAQ</div>
+      <Faq />
+    </div>
+    <a href={`mailto:${email}`} class="cta_call">
+      <img class="cta_photo" src="/img/sem-van-der-wal.webp" alt="Portret van Sem van der Wal op gele achtergrond" loading="lazy" />
+      <div class="cta_book">
+        <div><span class="mono16">Schedule a call</span><br /><span class="mono16">with</span> <strong>Sem van der Wal</strong></div>
+        <div class="cta_btn"><svg viewBox="0 0 10 10" aria-hidden="true"><path fill="currentColor" d="M0.710938 0H9.71094V9H7.71094V3.41L1.42094 9.71L0.000938416 8.29L6.30094 2H0.710938V0Z" /></svg></div>
+      </div>
+    </a>
+  </section>
+
+  <Studio />
 
   <Footer />
 </Base>

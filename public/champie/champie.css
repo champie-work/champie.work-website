@@ -11,20 +11,25 @@ html.lenis, html.lenis body { height: auto; }
 .champie-3d { position: fixed; inset: 0; z-index: 71; pointer-events: none; } /* boven menu (70) en projectvel (60) */
 [data-parallax-hero] { will-change: transform; }
 
-/* ===== Menu-balk ===== */
-.cmenu { position: fixed; left: 0; right: 0; margin: 0 auto; width: fit-content; bottom: 34px; z-index: 70; display: flex; gap: 20px; pointer-events: none; }
-.cmenu_logo { display: block; width: 40px; height: 40px; border-radius: 5px; background: #FFC82E; transform: scale(.3); opacity: 0; transition: transform .35s cubic-bezier(.55,0,1,.45), opacity .25s ease; }
-.cmenu_bar { box-sizing: border-box; height: 40px; padding: 0 20px; border-radius: 5px; display: flex; align-items: center; gap: 25px; background: #FFC82E; clip-path: inset(0 100% 0 0 round 5px); transition: clip-path .35s cubic-bezier(.55,0,1,.45); }
-.cmenu_link { color: #0E0E10; font: 600 20px/1 Geist, Arial, sans-serif; letter-spacing: -.02em; cursor: pointer; transform: translateX(-14px); opacity: 0; transition: transform .3s ease, opacity .2s ease; }
-.cmenu_link:not([href]) { cursor: default; }
+/* ===== Menubalk bovenaan (Figma "MENU POPUP", HTML in src/components/Menu.astro) =====
+   Popt omhoog zodra de gele header uit beeld is (menu.js zet .is-on). */
+.cmenu { position: fixed; top: 24px; left: 24px; right: 24px; z-index: 70; display: flex; justify-content: space-between; align-items: flex-start; pointer-events: none; }
+.cmenu_left { display: flex; gap: 5px; }
+.cmenu_logo, .cmenu_cta, .cmenu_nav .nav_col { opacity: 0; transform: translateY(18px) scale(.92); transition: transform .25s ease, opacity .2s ease; }
+.cmenu_logo { display: block; width: 40px; height: 40px; border-radius: 1px; background: #FFC82E; }
+.cmenu_logo svg { display: block; width: 100%; height: 100%; }
+.cmenu_cta { display: flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 1px; background: #FFC82E; color: #0D0D0D; font: 700 20px/1 Geist, Arial, sans-serif; letter-spacing: -.02em; text-decoration: none; white-space: nowrap; }
 .cmenu.is-on { pointer-events: auto; }
-.cmenu.is-on .cmenu_logo { transform: none; opacity: 1; transition: transform .7s cubic-bezier(.34,1.56,.64,1) .45s, opacity .3s ease .45s; }
-.cmenu.is-on .cmenu_bar { clip-path: inset(0 0 0 0 round 5px); transition: clip-path .8s cubic-bezier(.76,0,.24,1) .7s; }
-.cmenu.is-on .cmenu_link { transform: none; opacity: 1; transition: transform .8s cubic-bezier(.22,1,.36,1) .95s, opacity .5s ease .95s; }
+.cmenu.is-on .cmenu_logo, .cmenu.is-on .cmenu_cta, .cmenu.is-on .cmenu_nav .nav_col { opacity: 1; transform: none; transition: transform .6s cubic-bezier(.34,1.56,.64,1), opacity .3s ease; }
+.cmenu.is-on .cmenu_cta { transition-delay: .05s; }
+.cmenu.is-on .cmenu_nav .nav_col:nth-child(1) { transition-delay: .1s; }
+.cmenu.is-on .cmenu_nav .nav_col:nth-child(2) { transition-delay: .15s; }
+.cmenu.is-on .cmenu_nav .nav_col:nth-child(3) { transition-delay: .2s; }
 .cmenu a:focus-visible { outline: 2px solid #FFC82E; outline-offset: 3px; }
-@media (max-width: 767px) { .cmenu { bottom: 16px; } }
+@media (max-width: 767px) { .cmenu { top: 16px; left: 16px; right: 16px; } .cmenu_nav { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cmenu * { transition: none !important; } }
 
-/* Pagina zonder header-logo (projectpagina): menu staat er meteen, zonder animatie */
+/* Pagina zonder header (projectpagina): menu staat er meteen, zonder animatie */
 .cmenu.is-static, .cmenu.is-static * { transition: none !important; }
 
 /* ===== Parallax-foto's: iets groter dan hun kader ===== */
@@ -32,11 +37,11 @@ html.lenis, html.lenis body { height: auto; }
 
 /* ===== Project-hover ===== */
 [data-project] { cursor: pointer; }
-[data-project-title] { display: block; height: 24px; overflow: hidden; }
+[data-project-title] { display: block; height: 1.3em; overflow: hidden; }
 .ptr_track { display: flex; flex-direction: column; transition: transform .6s cubic-bezier(.76,0,.24,1); }
-.ptr_line { display: flex; align-items: center; gap: 10px; height: 24px; white-space: nowrap; }
+.ptr_line { display: flex; align-items: center; gap: 10px; height: 1.3em; white-space: nowrap; }
 .ptr_arrow { flex: none; transform: translateX(-8px); opacity: 0; transition: transform .6s cubic-bezier(.22,1,.36,1) .12s, opacity .4s ease .12s; }
-[data-project]:hover .ptr_track { transform: translateY(-24px); }
+[data-project]:hover .ptr_track { transform: translateY(-1.3em); }
 [data-project]:hover .ptr_arrow { transform: none; opacity: 1; }
 .project_follow { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; overflow: hidden; transform-origin: 0 0; transform: scale(0); will-change: transform; }
 .project_follow img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -50,9 +55,9 @@ html.lenis, html.lenis body { height: auto; }
 [data-nav-link] { position: relative; isolation: isolate; text-decoration: none; }
 [data-nav-link]::before { content: ""; position: absolute; inset: -4px -8px; z-index: -1; background: #0E0E10; border-radius: 2px; opacity: 0; transform: scale(.85); transition: opacity .25s ease, transform .4s cubic-bezier(.34,1.56,.64,1); }
 [data-nav-link]:hover::before { opacity: 1; transform: none; }
-.nh_clip { display: block; height: 1.2em; overflow: hidden; }
+.nh_clip { display: block; height: 1.3em; overflow: hidden; }
 .nh_track { display: flex; flex-direction: column; transition: transform .5s cubic-bezier(.76,0,.24,1); }
-.nh_track > span { display: block; height: 1.2em; white-space: nowrap; }
+.nh_track > span { display: block; height: 1.3em; white-space: nowrap; }
 .nh_alt { color: #FFC82E; }
 [data-nav-link]:hover .nh_track { transform: translateY(-50%); }
 [data-nav-link] svg { transition: color .3s ease; }

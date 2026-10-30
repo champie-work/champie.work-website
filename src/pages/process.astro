@@ -1,0 +1,48 @@
+---
+// Process (Figma "v2 web" > Process page, 567:1005). Opmaak: src/styles/v2.css (/* Process */).
+import Base from '../layouts/Base.astro';
+import SubHeader from '../components/SubHeader.astro';
+import Eye from '../components/Eye.astro';
+import TalkLink from '../components/TalkLink.astro';
+import Studio from '../components/Studio.astro';
+import Footer from '../components/Footer.astro';
+
+const steps = [
+  { title: 'Discovery', text: 'A conversation about the business, the goals and what the project needs to achieve. This is where the main requirements, budget and timeline are discussed.' },
+  { title: 'Scope & Proposal', text: 'The project is defined before work begins. Deliverables, timeline, investment and expectations are outlined in a proposal.' },
+  { title: 'Kickoff', text: 'Once the proposal is approved, the necessary content, references and assets are collected. The project gets a clear starting point.' },
+  { title: 'Design & Development', text: 'The work takes shape through research, concepts, design and development, depending on the project. Progress is shared at agreed stages.' },
+  { title: 'Feedback & Refinement', text: 'The work is reviewed together. Feedback is discussed, and the agreed revisions are made before final approval.' },
+  { title: 'Delivery', text: 'The finished work is handed over, or the website is prepared for launch. Any further support or improvements can be discussed after delivery.' },
+];
+const nr = (i) => String(i + 1).padStart(2, '0');
+---
+<Base title="Process | champie.work" menu={false}>
+  <main class="page process">
+    <SubHeader title="Process" />
+    <h1 class="page_title process_title">From first conversation<br />to final delivery.<Eye class="page_eye" /></h1>
+    <div class="grid page_row">
+      <div class="label">Process</div>
+      <p class="body20 with_square">Every project starts with understanding what needs to be done. Goals, scope and expectations are discussed before the design begins, keeping the process clear from the first conversation to the final delivery.</p>
+    </div>
+
+    {[steps.slice(0, 3), steps.slice(3)].map((row, r) => (
+      <>
+        {r === 1 && <h2 class="page_title process_questions">The right work starts<br />with the right<br />questions.</h2>}
+        <div class:list={['steps', r === 0 ? 'steps_1' : 'steps_2']}>
+          {row.map((s, i) => (
+            <div>
+              <div class="step_head"><span class="step_nr">{nr(r * 3 + i)}</span><h3 class="step_title">{s.title}</h3></div>
+              <p class="body20 step_text">{s.text}</p>
+            </div>
+          ))}
+        </div>
+      </>
+    ))}
+
+    <h2 class="big_center process_direct">Direct communication.<br />No unnecessary layers.</h2>
+    <TalkLink />
+  </main>
+  <Studio />
+  <Footer />
+</Base>

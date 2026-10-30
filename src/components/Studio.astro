@@ -1,0 +1,8 @@
+---
+// Donkere studio-foto met slogan en e-mail (boven de footer, op elke pagina).
+import { email } from '../data/site.js';
+---
+<section class="studio">
+  <img class="studio_bg" src="/img/home-studio.webp" alt="" loading="lazy" />
+  <p class="mono studio_text">For brands with something to say.<br />Design that makes them heard.<br /><br /><br /><br /><a href={`mailto:${email}`}>{email}</a></p>
+</section>

@@ -1,22 +1,21 @@
 // 3D-logo (Three.js)
-//  [data-logo3d]          het vak in de header waar het grote logo staat
-//  [data-logo3d-trigger]  zodra dit element half uit beeld is, vliegt het logo naar het menu
-//  [data-logo3d-footer]   plek in de footer: komt die in beeld, dan gaat het menu weg en vliegt het logo erheen
+//  [data-logo3d]          het vak in de header waar het grote logo staat (scrolt mee met de header)
+//  [data-logo3d-footer]   plek in de footer: daar staat het logo zodra de footer in beeld is
+// Het logo wordt geknipt op de header/footer, zodat de zwarte secties eroverheen schuiven.
 //
 // Gedrag:
 //  - In rust draait het hele hoofd rond (voorkant langzaam, achterkant snel); het oog staat stil zoals het logo.
 //  - Muis beweegt: hij draait door naar de voorkant, kantelt naar de cursor en het oog kijkt mee.
-//  - Scrollen: het logo vliegt in één vloeiende beweging naar het gele vak van de menu-balk.
-//  - Bij de footer: het menu verdwijnt en het logo vliegt uit het menu naar de footer (en terug bij omhoog scrollen).
+//  - Scrollen: het logo blijft in de header (beweegt mee met de header-parallax).
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/+esm';
 import { SVGLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/SVGLoader.js/+esm';
 import { onFrame, pointer, reduceMotion, viewW, viewH } from '../lib/core.js';
-import { TAU, clamp, lerp, easeInOutQuart, easeInOutCubic, follow, spring, nextFront } from '../lib/math.js';
+import { TAU, clamp, lerp, follow, spring, nextFront } from '../lib/math.js';
 import { parallaxState } from './parallax.js';
 
 /* ===== INSTELLINGEN ===== */
 const C = {
-  bodyColor:   '#0E0E10', // kleur van het logo
+  bodyColor:   '#0D0D0D', // kleur van het logo (Figma v2)
   eyeColor:    '#FFFFFF', // oogwit
   edgeColor:   '#E0DED9', // lichte randlijnen bij kantelen
   edgeOpacity: 0.65,      // sterkte randlijnen (0 = uit)
@@ -32,11 +31,8 @@ const C = {
   spinFast:    8,         // draaisnelheid achterlangs (rad/s)
   spinDelay:   2.5,       // seconden muis-stilstand voordat het draaien weer begint
   spinHome:    7,         // hoe snel hij bij muisbeweging doordraait naar de voorkant
-  logoHeight:  0.92,      // logohoogte t.o.v. het header-vak (vak = ruimte onder de nav-balk)
+  logoHeight:  1,         // logohoogte t.o.v. het header-vak ([data-logo3d] = precies het logo in Figma)
   logoCenterY: 0.5,       // verticale positie in het header-vak (0 = boven, 1 = onder)
-  smallHeight: 25,        // hoogte (px) van het logo in het gele menu-vak
-  morphTime:   1.1,       // duur (s) van de overgang groot -> klein
-  footerAt:    0.8,       // logo gaat naar de footer als het midden van de footer-plek boven deze schermhoogte komt (0 = boven, 1 = onder)
   footerSize:  1,         // logohoogte t.o.v. de footer-plek
 };
 /* ======================== */
@@ -55,7 +51,7 @@ const SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 386">' +
 const EYE = { left: -32, center: 34.18, right: 125.02 };    // links = exact het logo
 const PUP = { rest: 72.7, center: 94.44, min: 50, max: 130 }; // binnen deze grenzen raakt de pupil nooit de rand
 
-export function initLogo3d({ anchor, trigger, menu }) {
+export function initLogo3d({ anchor }) {
   // --- Canvas over het hele scherm ---
   const holder = document.createElement('div');
   holder.className = 'champie-3d';
@@ -112,29 +108,21 @@ export function initLogo3d({ anchor, trigger, menu }) {
   white.position.z = 0.3; white.renderOrder = 2; eye.add(white);
   const pupil = new THREE.Mesh(new THREE.ShapeGeometry(shapesOf(2), 48), Object.assign(mat(C.bodyColor, -2), insideFace));
   pupil.position.z = 0.6; pupil.renderOrder = 3; eye.add(pupil);
+  pupil.position.y = -2; // iets omhoog: dekt de bovenrand van het oogwit af (anders een dun licht lijntje)
 
   // Lichte randlijnen langs de buitenomtrek
   const edgeMat = new THREE.LineBasicMaterial({ color: new THREE.Color(C.edgeColor), transparent: true, opacity: 0 });
   inner.add(new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 25), edgeMat));
 
-  // --- Moment van de overgang naar het menu: trigger half uit beeld ---
-  let morphStart = 0;
-  function measure() {
-    if (!trigger) return;
-    const pt = trigger.style.transform; trigger.style.transform = 'none'; // meten zonder parallax
-    const r = trigger.getBoundingClientRect();
-    morphStart = Math.max(1, (r.top + r.bottom) / 2 + window.scrollY) / (1 - parallaxState.heroSpeed);
-    trigger.style.transform = pt;
-  }
   function resize() {
     renderer.setSize(viewW(), viewH(), false);
     camera.aspect = viewW() / viewH();
     camera.updateProjectionMatrix();
-    measure();
   }
   window.addEventListener('resize', resize);
-  window.addEventListener('load', measure);
   resize();
+  renderer.setScissorTest(true);
+  const hero = anchor ? anchor.closest('[data-hero]') || anchor : null;
 
   // --- Status ---
   const spinSpeed = (a) => C.spinSlow + (C.spinFast - C.spinSlow) * Math.pow((1 - Math.cos(a)) / 2, 2);
@@ -144,11 +132,6 @@ export function initLogo3d({ anchor, trigger, menu }) {
   let spinRamp = 0, wasSpinning = false, homeTarget = 0;
   let saccade = 0, nextSaccade = 1.5;
   let rx = 0, ry = 0;
-  // In het menu: voorbij de trigger, op een pagina zonder header-vak, of als een projectvel open is
-  const inMenu = () => !anchor || !trigger || document.documentElement.classList.contains('project-open') || window.scrollY >= morphStart;
-  let morph = inMenu() ? 1 : 0; // 0 = groot, 1 = in het menu
-  if (!anchor) menu.el.classList.add('is-on', 'is-static'); // projectpagina: menu meteen vast in beeld
-
   // Footer-plek die nu telt: in het projectvel als dat open is, anders die op de pagina zelf (niet de wazige home erachter)
   const footerSpot = () => {
     const open = document.documentElement.classList.contains('project-open');
@@ -156,36 +139,29 @@ export function initLogo3d({ anchor, trigger, menu }) {
       if (!el.closest('.cpp_home') && !!el.closest('.cpp') === open) return el;
     return null;
   };
-  let foot = 0, footRect = null; // 0 = menu/header, 1 = in de footer
 
   onFrame((now, dt) => {
     const vw = viewW(), vh = viewH();
     if (renderer.domElement.width !== Math.floor(vw * renderer.getPixelRatio())) resize();
 
-    // Overgang groot -> menu: speelt in één keer af
-    const target = inMenu() ? 1 : 0;
+    // Waar staat het logo: in de footer zodra die in beeld is, anders in de header
+    const open = document.documentElement.classList.contains('project-open');
     const spot = footerSpot();
-    if (spot) footRect = spot.getBoundingClientRect();
-    const toFoot = !!spot && footRect.top + footRect.height / 2 < vh * C.footerAt && footRect.bottom > 0;
-    foot = reduceMotion ? +toFoot : toFoot ? Math.min(1, foot + dt / C.morphTime) : Math.max(0, foot - dt / C.morphTime);
-    menu.setVisible(target === 1 && !toFoot);
-    morph = reduceMotion ? target : target > morph ? Math.min(1, morph + dt / C.morphTime) : Math.max(0, morph - dt / C.morphTime);
-    const p = easeInOutQuart(morph);
-    const py = easeInOutCubic(morph); // y iets eerder dan x = zachte boog
-
-    const a = anchor ? anchor.getBoundingClientRect() : { top: 0, height: 0 };
-    const startH = a.height * C.logoHeight;
-    const startY = a.top + a.height * C.logoCenterY + parallaxState.heroShift;
-    const end = menu.boxCenter();
-    let h = lerp(startH, C.smallHeight, p);
-    let cx = lerp(vw / 2, end.x, p);
-    let cy = lerp(startY, end.y, py);
-    if (foot > 0 && footRect) { // uit het menu naar de footer: zelfde beweging, omgekeerd
-      const pf = easeInOutQuart(foot);
-      h = lerp(h, footRect.height * C.footerSize, pf);
-      cx = lerp(cx, footRect.left + footRect.width / 2, pf);
-      cy = lerp(cy, footRect.top + footRect.height / 2, easeInOutCubic(foot));
+    const fr = spot && spot.getBoundingClientRect();
+    let box = null, clip = null;
+    if (fr && fr.top < vh && fr.bottom > 0) {
+      box = { cx: fr.left + fr.width / 2, cy: fr.top + fr.height / 2, h: fr.height * C.footerSize };
+      clip = (spot.closest('[data-footer]') || spot).getBoundingClientRect();
+    } else if (anchor && !open) {
+      const a = anchor.getBoundingClientRect();
+      clip = hero.getBoundingClientRect();
+      if (clip.bottom > 0) box = { cx: a.left + a.width / 2, cy: a.top + a.height * C.logoCenterY + parallaxState.heroShift, h: a.height * C.logoHeight };
     }
+    if (!box) { renderer.setScissor(0, 0, vw, vh); renderer.clear(); return; }
+    const top = Math.max(0, clip.top), bottom = Math.min(vh, clip.bottom);
+    renderer.setScissor(0, 0, vw, vh); renderer.clear(); // vorige frame wissen
+    renderer.setScissor(0, vh - bottom, vw, Math.max(0, bottom - top));
+    const h = box.h, cx = box.cx, cy = box.cy;
     logo.scale.setScalar((h * VIEW / vh) / H);
     camera.setViewOffset(vw, vh, -(cx - vw / 2), -(cy - vh / 2), vw, vh);
 

@@ -4,6 +4,8 @@
 > - Pagina's: `src/pages/` (home = `index.astro`, projecten = `src/pages/project/<naam>.astro`; nieuw project = bestand kopiëren).
 > - Gedeeld: `src/layouts/Base.astro` (head + scripts), `src/components/Footer.astro`, stijlen `src/styles/site.css`.
 > - De animatie-scripts staan ongewijzigd in `public/champie/` (was `src/`), beelden in `public/img/` (was `assets/`).
+> - **Branches (werkwijze Ravi)**: `main` = live (champie.work), `development` = staging, werk gebeurt op een eigen branch (bv. `v2-home`). Klaar → PR naar `development` → owner checkt → PR `development` → `main`. Elke branch krijgt een testlink: `https://<branch>-champie-work-website.falling-band-3cb9.workers.dev`. Build-status staat als check op de commit (`gh api repos/champie-work/champie.work-website/commits/<sha>/check-runs`).
+> - **V2-ontwerp**: Figma pagina `v2 web` (567:673). Homepage `567:674`, menubalk `570:1081`. Opmaak in `src/styles/v2.css` (maten = Figma-px × `--u`), links in `src/data/site.js`.
 > - Alles hieronder over Webflow/jsDelivr is de oude Webflow-site: die laadt vast commit `dc2f09e` (paden `src/...`). Niet meer aanpassen.
 
 Code for the animations and interaction on champie.work. The site itself is built in Webflow (site id `6ad1083b76cf28f6ee90f556`, home page `6ad1083d76cf28f6ee90f577`).
