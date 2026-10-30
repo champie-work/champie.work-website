@@ -46,8 +46,8 @@ p { margin: 0; }
 .intro, .projects, .services, .insights, .cta, .studio { position: relative; z-index: 2; background: var(--dark); }
 
 /* ===== Intro ===== */
-.intro { padding: calc(98.7 * var(--u)) calc(24 * var(--u)) calc(75 * var(--u)); }
-.intro_text { width: calc(1274 * var(--u)); font-weight: 600; font-size: calc(52 * var(--u)); line-height: 1.3; text-align: justify; text-indent: 5.5em; }
+.intro { padding: calc(98.7 * var(--u)) calc(24 * var(--u)) calc(142.6 * var(--u)); } /* 3 regels; Figma-vak is 444 hoog */
+.intro_text { width: calc(1274 * var(--u)); font-weight: 600; font-size: calc(52 * var(--u)); line-height: 1.3; text-align: justify; text-indent: 5.42em; }
 .intro_eye { display: inline-block; width: calc(93 * var(--u)); height: calc(31 * var(--u)); margin: 0 calc(16.5 * var(--u)); vertical-align: 0; }
 
 /* ===== Projects ===== */
@@ -62,7 +62,7 @@ p { margin: 0; }
 .project_arrow { width: calc(14 * var(--u)); height: calc(15 * var(--u)); color: var(--light); }
 
 /* ===== Services ===== */
-.services { padding: calc(313.1 * var(--u)) calc(24 * var(--u)) calc(121 * var(--u)); }
+.services { padding: calc(313.1 * var(--u)) calc(24 * var(--u)) calc(119 * var(--u)); }
 .services_heading { margin: 0; font-weight: 600; font-size: calc(96 * var(--u)); line-height: calc(110 * var(--u)); }
 .services_row { margin-top: calc(86.9 * var(--u)); }
 .services_side { position: relative; }
@@ -86,7 +86,7 @@ p { margin: 0; }
 .insight_time svg { width: calc(7 * var(--u)); height: calc(11 * var(--u)); }
 
 /* ===== Have something worth building? + FAQ ===== */
-.cta { padding: calc(203.1 * var(--u)) calc(142 * var(--u)) calc(275 * var(--u)); color: #f2f2f2; }
+.cta { padding: calc(203.1 * var(--u)) calc(142 * var(--u)) calc(270 * var(--u)); color: #f2f2f2; }
 .cta_heading { margin: 0; font-weight: 700; font-size: calc(96 * var(--u)); line-height: calc(110 * var(--u)); }
 .cta_sub { margin-top: calc(36.9 * var(--u)); }
 .faq { display: grid; grid-template-columns: calc(119 * var(--u)) calc(684 * var(--u)); margin-top: calc(74 * var(--u)); }
@@ -117,7 +117,7 @@ p { margin: 0; }
 
 /* ===== Footer ===== */
 .ft { position: relative; overflow: hidden; background: var(--yellow); color: var(--dark); }
-.ft_inner { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(24 * var(--u)); padding: calc(98.28 * var(--u)) calc(24 * var(--u)) calc(106 * var(--u)); will-change: transform; }
+.ft_inner { display: grid; grid-template-columns: 1fr 1fr; column-gap: calc(24 * var(--u)); padding: calc(98.28 * var(--u)) calc(24 * var(--u)) calc(101 * var(--u)); will-change: transform; }
 .ft_label, .ft_copy { font-family: 'Geist Mono', monospace; font-size: calc(16 * var(--u)); line-height: 1.3; }
 .ft_links { display: flex; flex-direction: column; width: calc(472 * var(--u)); margin-top: calc(.76 * var(--u)); }
 .ft_link { padding: calc(15.84 * var(--u)) 0; border-bottom: 1px solid var(--dark); font-weight: 700; font-size: calc(48 * var(--u)); line-height: 1.3; text-decoration: none; transition: opacity .25s ease; }
